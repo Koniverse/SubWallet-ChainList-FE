@@ -1,5 +1,9 @@
 import type { GatsbyConfig } from "gatsby"
-
+require("dotenv").config({
+    path: `.env`,
+})
+console.log(process.env.STRAPI_TOKEN)
+console.log(process.env.STRAPI_API_URL)
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `SubWallet-ChainList-FE`,
@@ -9,7 +13,28 @@ const config: GatsbyConfig = {
   // If you use VSCode you can also use the GraphQL plugin
   // Learn more at: https://gatsby.dev/graphql-typegen
   graphqlTypegen: true,
-  plugins: [],
+  plugins: [
+
+        `gatsby-plugin-image`,
+        {
+            resolve: `gatsby-source-filesystem`,
+            options: {
+                name: `images`,
+                path: `${__dirname}/src/images`,
+            },
+        },
+        `gatsby-transformer-sharp`,
+        `gatsby-plugin-sharp`,
+
+        {
+            resolve: "gatsby-source-strapi",
+            options: {
+                apiURL: process.env.STRAPI_API_URL || "http://localhost:1337",
+                accessToken: process.env.STRAPI_TOKEN,
+                collectionTypes: ["chain", "data-content-test"],
+            }
+        },
+  ],
 }
 
 export default config
