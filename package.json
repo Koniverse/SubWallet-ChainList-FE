@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@polkadot/api": "^10.10.1",
-    "@subwallet/react-ui": "^5.1.2-b73",
+    "@subwallet/react-ui": "^5.1.2-b74",
     "gatsby": "^5.12.4",
     "gatsby-plugin-image": "^3.12.3",
     "gatsby-plugin-sharp": "^5.12.3",

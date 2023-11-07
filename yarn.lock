@@ -3786,7 +3786,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@subwallet/react-ui@npm:^5.1.2-b73":
+"@subwallet/react-ui@npm:^5.1.2-b74":
   version: 5.1.2-b9
   resolution: "@subwallet/react-ui@npm:5.1.2-b9"
   dependencies:
@@ -14848,7 +14848,7 @@ __metadata:
   resolution: "sub-wallet-chain-list-fe@workspace:."
   dependencies:
     "@polkadot/api": ^10.10.1
-    "@subwallet/react-ui": ^5.1.2-b73
+    "@subwallet/react-ui": ^5.1.2-b74
     "@types/node": ^20.3.3
     "@types/react": ^18.2.14
     "@types/react-dom": ^18.2.6
