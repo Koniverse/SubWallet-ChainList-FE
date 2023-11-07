@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@polkadot/api": "^10.10.1",
-    "@subwallet/react-ui": "^5.1.2-b69",
+    "@subwallet/react-ui": "^5.1.2-b73",
     "gatsby": "^5.12.4",
     "gatsby-plugin-image": "^3.12.3",
     "gatsby-plugin-sharp": "^5.12.3",
@@ -27,11 +27,11 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@polkadot/dev": "^0.76.23",
     "@types/node": "^20.3.3",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "@types/styled-components": "^5.1.29",
     "typescript": "^5.1.6"
-  }
+  },
+  "packageManager": "yarn@3.4.1"
 }

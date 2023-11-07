@@ -1,4 +1,4 @@
-import {Card, Space, Typography} from "@subwallet/react-ui";
+import {Card, Space, Typography, Web3Block} from "@subwallet/react-ui";
 import {GatsbyImage, getImage} from "gatsby-plugin-image";
 import * as React from "react";
 import {Chain} from "../../types/chain";

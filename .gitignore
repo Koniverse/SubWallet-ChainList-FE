@@ -4,3 +4,12 @@ node_modules/
 public
 src/gatsby-types.d.ts
 .env
+
+# Yarn 3 files
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
