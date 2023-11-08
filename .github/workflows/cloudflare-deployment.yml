@@ -21,7 +21,7 @@ jobs:
           token: ${{ secrets.GH_AUTOMATION_TOKEN }}
       - name: Build
         run: |
-          yarn install --no-save | grep -v 'YN0013'
+          yarn install | grep -v 'YN0013'
           CI=false yarn build
 
       - name: Publish to Cloudflare Pages
