@@ -2,10 +2,7 @@ name: Cloudflare Pages Deployment
 on:
   push:
     branches:
-      - dev_anhnt
       - main
-  schedule:
-    - cron: '0 * * * *'
 
 jobs:
   master:
@@ -24,7 +21,7 @@ jobs:
           token: ${{ secrets.GH_AUTOMATION_TOKEN }}
       - name: Build
         run: |
-          npm install --no-save | grep -v 'YN0013'
+          yarn install --no-save | grep -v 'YN0013'
           CI=false yarn build
 
       - name: Publish to Cloudflare Pages
