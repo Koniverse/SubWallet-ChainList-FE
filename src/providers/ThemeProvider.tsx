@@ -3,7 +3,7 @@
 
 
 import {appTheme} from '../themes';
-import {ConfigProvider, ModalContextProvider} from '@subwallet/react-ui';
+import {ConfigProvider} from '@subwallet/react-ui';
 import React from 'react';
 import styled, { createGlobalStyle, ThemeProvider as StyledComponentThemeProvider } from 'styled-components';
 import {Theme, ThemeProps} from "../types/theme";
@@ -165,9 +165,7 @@ export function ThemeProvider ({ children }: ThemeProviderProps): React.ReactEle
     >
       <ThemeGenerator themeConfig={appTheme}>
         <TooltipContainer id='tooltip-container' />
-        <ModalContextProvider>
           {children}
-        </ModalContextProvider>
       </ThemeGenerator>
     </ConfigProvider>
   );

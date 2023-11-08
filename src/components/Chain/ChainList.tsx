@@ -1,15 +1,19 @@
 import ChainItem from "./ChainItem";
-import {Space} from "@subwallet/react-ui";
+import {Card, Col, Input, Row, Space, Typography} from "@subwallet/react-ui";
 import * as React from "react";
 import {graphql, useStaticQuery} from "gatsby";
 import {Chain} from "../../types/chain";
+import {useState} from "react";
+
 interface DataChain {
     node: Chain
 }
+
 const ChainList = () => {
+    const [searchInput, setSearchInput] = useState('int');
     const data = useStaticQuery(graphql`
         {
-            allStrapiChain {
+             allStrapiChain(filter: {name: {regex: "//i"}}) {
                 edges {
                     node {
                         id
@@ -35,15 +39,24 @@ const ChainList = () => {
         }
     `)
     return (
-        <Space direction="horizontal" style={{display: 'flex'}} size={[8, 16]} wrap>
-            {
-                data.allStrapiChain.edges.map(({node}: DataChain) => {
-                    console.log(node)
-                    return (
-                        <ChainItem node={node} key={node.id}/>
-                    )
-                })
-            }
+        <Space direction='vertical'>
+            <Row>
+                <Col span={24}>
+                    <Card size={'default'}>
+                        <Input placeholder="Search chain" size='md' prefix={<i className="icon icon-search"/>}/>
+
+                    </Card>
+                </Col>
+            </Row>
+            <Space direction="horizontal" style={{display: 'flex'}} size={[12, 16]} wrap>
+                {
+                    data.allStrapiChain.edges.map(({node}: DataChain) => {
+                        return (
+                            <ChainItem node={node} key={node.id}/>
+                        )
+                    })
+                }
+            </Space>
         </Space>
     )
 }

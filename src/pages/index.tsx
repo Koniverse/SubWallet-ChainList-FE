@@ -1,14 +1,17 @@
 import * as React from "react"
-import {graphql, Link} from "gatsby";
 import Layout from "../components/Layout";
-import STRAPI_CHAINConnection = Queries.STRAPI_CHAINConnection;
 import Seo from "../components/seo";
 import ChainList from "../components/Chain/ChainList";
+import {Col, Row} from "@subwallet/react-ui";
 
 const IndexPage: () => React.JSX.Element = () => {
     return (
         <Layout>
-            <ChainList/>
+            <Row>
+                <Col span={16} offset={4}>
+                    <ChainList/>
+                </Col>
+            </Row>
         </Layout>
     )
 }

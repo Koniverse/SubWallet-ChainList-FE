@@ -2,8 +2,6 @@ import type { GatsbyConfig } from "gatsby"
 require("dotenv").config({
     path: `.env`,
 })
-console.log(process.env.STRAPI_TOKEN)
-console.log(process.env.STRAPI_API_URL)
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `SubWallet-ChainList-FE`,

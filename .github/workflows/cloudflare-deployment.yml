@@ -1,0 +1,39 @@
+name: Cloudflare Pages Deployment
+on:
+  push:
+    branches:
+      - dev_anhnt
+      - main
+  schedule:
+    - cron: '0 * * * *'
+
+jobs:
+  master:
+    name: Cloudflare Pages
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        env:
+          token: ${{ secrets.GH_AUTOMATION_TOKEN }}
+      - name: Build
+        run: |
+          npm install --no-save | grep -v 'YN0013'
+          CI=false yarn build
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: 'subwallet-chainlist-fe'
+          gitHubToken: ${{ secrets.GH_AUTOMATION_TOKEN }}
+          branch: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || github.ref_name }}
+          directory: './public'
+          wranglerVersion: '3'

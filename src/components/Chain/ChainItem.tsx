@@ -10,7 +10,7 @@ interface Props {
 const ChainItem = ({node}: Props) => {
     const symbol = node?.substrateInfo?.symbol || node?.evmInfo?.symbol
     return (
-        <Card bordered={true} style={{width: 320, height: 200}}>
+        <Card bordered={true} style={{width: 360, height: 200}}>
             <Space direction="vertical">
                 <Space>
                     <GatsbyImage
