@@ -9,6 +9,8 @@ import * as React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 
 import "./layout.css"
+import {AppStateProvider} from "../../providers/AppStateProvider";
+import NotificationProvider from "../../providers/NotificationProvider";
 import {ThemeProvider} from "../../providers/ThemeProvider";
 interface Props {
     children: React.ReactNode
@@ -26,7 +28,11 @@ const Layout = ({ children }: Props) => {
 
   return (
     <ThemeProvider>
-        {children}
+        <NotificationProvider>
+          <AppStateProvider>
+              {children}
+          </AppStateProvider>
+      </NotificationProvider>
     </ThemeProvider>
   )
 }

@@ -19,6 +19,11 @@ jobs:
           fetch-depth: 0
         env:
           token: ${{ secrets.GH_AUTOMATION_TOKEN }}
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo STRAPI_TOKEN=${{ secrets.STRAPI_TOKEN }} >> .env
+          echo STRAPI_API_URL=${{ secrets.STRAPI_API_URL }} >> .env
       - name: Build
         run: |
           yarn install | grep -v 'YN0013'
