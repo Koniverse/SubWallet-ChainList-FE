@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - anhnt
 
 jobs:
   master:
@@ -26,7 +27,7 @@ jobs:
           echo STRAPI_API_URL=${{ secrets.STRAPI_API_URL }} >> .env
       - name: Build
         run: |
-          yarn install --immutable-cache | grep -v 'YN0013'
+          yarn install --immutable
           CI=false yarn build
 
       - name: Publish to Cloudflare Pages
