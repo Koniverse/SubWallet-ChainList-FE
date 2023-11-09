@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@polkadot/api": "^10.10.1",
     "@subwallet/react-ui": "^5.1.2-b74",
     "gatsby": "^5.12.4",
