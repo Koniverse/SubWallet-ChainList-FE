@@ -42,7 +42,6 @@ function shuffleArray(originalArray: any[]): any[] {
 
 const ChainPage = ({data}: Props) => {
     const {strapiChain,allStrapiChainAsset} = data;
-    console.log(data)
 
 
     const columnsTokens: ColumnsType<DataTypeToken> = [

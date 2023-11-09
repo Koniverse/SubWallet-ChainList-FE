@@ -4,6 +4,7 @@ node_modules/
 public
 src/gatsby-types.d.ts
 .env
+yarn.lock
 
 # Yarn 3 files
 .pnp.*

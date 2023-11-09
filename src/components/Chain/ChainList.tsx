@@ -43,7 +43,6 @@ const ChainList = () => {
         }
     `)
     const dataFilter = useMemo(() => {
-        console.log(searchInput, searchType, searchTestnet)
         return data.allStrapiChain.edges.filter(({node}: DataChain) => {
             if (searchType === 'substrate') {
                 return node.name.toLowerCase().includes(searchInput.toLowerCase())
@@ -60,12 +59,10 @@ const ChainList = () => {
         setSearchInput(e.target.value)
     }
     const handleChange = (value: string) => {
-        console.log(`selected ${value}`);
         setSearchType(value);
     }
 
     const onChangeTestnet = (e: CheckboxChangeEvent) => {
-        console.log(`checked = ${e.target.checked}`);
         setSearchTestnet(e.target.checked);
     };
 

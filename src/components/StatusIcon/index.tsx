@@ -19,7 +19,6 @@ const StatusIcon = ({ status }: Props) => {
   const theme = appTheme;
   // @ts-ignore
   const color = theme.token[`color${status[0].toUpperCase()}${status.slice(1)}`];
-  console.log('color', color)
     const Icon = iconMapFilled[status];
     return <Icon color={color} weight='fill' size={18}/>;
 }
