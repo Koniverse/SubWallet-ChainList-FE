@@ -27,7 +27,7 @@ jobs:
           echo STRAPI_API_URL=${{ secrets.STRAPI_API_URL }} >> .env
       - name: Build
         run: |
-          yarn install --immutable
+          yarn install --no-immutable
           CI=false yarn build
 
       - name: Publish to Cloudflare Pages
