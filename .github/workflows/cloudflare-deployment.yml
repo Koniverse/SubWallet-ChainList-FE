@@ -23,8 +23,9 @@ jobs:
       - name: 'Create env file'
         run: |
           touch .env
-          echo STRAPI_TOKEN=${{ secrets.STRAPI_TOKEN }} >> .env
-          echo STRAPI_API_URL=${{ secrets.STRAPI_API_URL }} >> .env
+          echo REACT_APP_STRAPI_TOKEN=${{ secrets.STRAPI_TOKEN }} >> .env
+          echo REACT_APP_STRAPI_API_URL=${{ secrets.STRAPI_API_URL }} >> .env
+          echo GENERATE_SOURCEMAP=false >> .env
       - name: Build
         run: |
           yarn install --no-immutable

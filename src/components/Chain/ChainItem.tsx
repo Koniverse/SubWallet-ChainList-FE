@@ -1,58 +1,208 @@
-import {Card, Space, Typography, Web3Block} from "@subwallet/react-ui";
-import {GatsbyImage, getImage} from "gatsby-plugin-image";
-import * as React from "react";
-import {Chain} from "../../types/dataType";
-import {Link} from "gatsby";
+import {Button, Icon, Image, Typography} from '@subwallet/react-ui';
+import CN from 'classnames';
+import {PlusCircle} from 'phosphor-react';
+import React, {useCallback, useMemo} from 'react';
+import {useTranslation} from 'react-i18next';
+import styled from 'styled-components';
+import { ThemeProps} from "../../types";
+import {Chain, ChainType} from "../../types/dataType";
+import ChainAssetGroup from "../ChainAssetGroup";
+import {useNavigate} from "react-router-dom";
+import ArrowRight from "../../components/Icon/ArrowRight";
+import NetworkType from "../../components/Icon/NetworkType";
 
-interface Props {
-    node: Chain
-}
+type Props = ThemeProps & {
+    compactMode?: boolean
+    chain: Chain
+};
 
-const ChainItem = ({node}: Props) => {
-    const symbol = node?.substrateInfo?.symbol || node?.evmInfo?.symbol
+function Component(props: Props): React.ReactElement<Props> {
+    const {className, chain} = props;
+    const {t} = useTranslation();
+    const navigate = useNavigate();
+    const type = useMemo(() => {
+        if (chain.substrateInfo) {
+            return ChainType.SUBSTRATE
+        }
+        return ChainType.EVM
+    }, [chain]);
+    let onClickConnect = useCallback((event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+    }, []);
+    const onClickItem = useCallback((event: React.MouseEvent<HTMLElement>) => {
+        event.stopPropagation();
+        navigate('/chain/' + chain.slug);
+    }, [chain, navigate])
     return (
-        <Card bordered={true} style={{width: 360, height: 300}}>
-            <Space direction="vertical" style={{display: 'flex'}}>
-                <Space>
-                    <GatsbyImage
-                        image={getImage(node?.icon?.localFile as any) as any}
-                        className="mt-6" alt={node.name as string}/>
-                    <Link to={`/chain/${node.slug}`}>
-                        <Typography.Title level={4}>{node.name}</Typography.Title>
-                    </Link>
-                </Space>
-                <Space direction='vertical' size={[16, 16]} wrap>
-                    <Space direction='horizontal'  size='large'>
-                        <Space direction='vertical'>
-                            <Typography.Text>ChainID</Typography.Text>
-                            <Typography.Text>{node.id.slice(0, 10)}</Typography.Text>
-                        </Space>
-                        <Space direction='vertical'>
-                            <Typography.Text>Currency</Typography.Text>
-                            <Typography.Title size='md'>{symbol}</Typography.Title>
-                        </Space>
-                        <Space direction='vertical'>
-                            <Typography.Text>Slug</Typography.Text>
-                            <Typography.Title size='md'>{node.slug}</Typography.Title>
-                        </Space>
-                    </Space>
-                    <Space direction='horizontal' size='large'>
-                        <Space direction='vertical'>
-                            <Typography.Text>Type</Typography.Text>
-                            <Typography.Text>{node.substrateInfo ? 'Substrate' : 'EVM'}</Typography.Text>
-                        </Space>
-                        <Space direction='vertical'>
-                            <Typography.Text>IsTestnet</Typography.Text>
-                            <Typography.Title size='md'>{node.isTestnet ? 'Yes': 'No'}</Typography.Title>
-                        </Space>
-                        <Space direction='vertical'>
-                            <Typography.Text>Price</Typography.Text>
-                            <Typography.Title size='md'>{symbol}</Typography.Title>
-                        </Space>
-                    </Space>
-                </Space>
-            </Space>`
-        </Card>
+        <div
+            className={CN(className, '-normal-mode')}
+        >
+            <div className={'__item-header'}>
+                <Image
+                    height={'100%'}
+                    src={chain.icon.data.attributes.url}
+                    width={'100%'}
+                />
+                <div className={'__item-title-group'}>
+                    <div className='__item-title'>
+                        {chain.name}
+                    </div>
+                    <div className='__item-subtitle'>
+                        Chain ID:
+                    </div>
+                </div>
+            </div>
+            <div className={'__item-type'}>
+                <NetworkType type={type}/>
+                {
+                    !!chain.chainAsset && !!chain.chainAsset.length && (
+                        <div className='__item-chains-area'>
+                            <ChainAssetGroup chainAsset={chain.chainAsset}/>
+                        </div>
+                    )
+                }
+            </div>
+
+            <div className={'__item-connect'}>
+
+                <div className="__item-connect-button">
+                    <Button
+                        className={'__item-join-now-button'}
+                        icon={(
+                            <Icon
+                                phosphorIcon={PlusCircle}
+                                size={'sm'}
+                                weight={'fill'}
+                            />
+                        )}
+
+                        onClick={onClickConnect}
+                        shape={'circle'}
+                        type='ghost'
+                        size={'xs'}
+                    />
+                    <Typography.Text>{t('Add to wallet')}</Typography.Text>
+                </div>
+
+                <Button
+                    className={'__sidebar-collapse-trigger'}
+                    icon={<ArrowRight/>}
+                    onClick={onClickItem}
+                    size={'xs'}
+                    type='ghost'
+                />
+            </div>
+        </div>
     );
 }
+
+const ChainItem = styled(Component)<Props>(({theme: {token}}: Props) => {
+
+    return {
+        overflow: 'hidden',
+        cursor: 'pointer',
+
+        '&.-normal-mode': {
+            padding: token.padding,
+            backgroundColor: token.colorBgSecondary,
+            borderRadius: token.borderRadiusLG
+        },
+
+        '.__item-header': {
+            display: 'flex',
+            overflow: 'hidden',
+            gap: token.sizeXS,
+            alignItems: 'center',
+            marginBottom: token.marginSM,
+
+            '.ant-image': {
+                width: 38,
+                height: 38,
+                minWidth: 38
+            }
+        },
+        '.__item-title, .__item-subtitle': {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            'white-space': 'nowrap'
+        },
+        '.__item-title-group': {
+            flex: 1,
+            overflow: 'hidden'
+        },
+        '.__item-title': {
+            fontSize: token.fontSizeLG,
+            lineHeight: token.lineHeightLG,
+            color: token.colorTextLight1
+        },
+        '.__item-subtitle': {
+            fontSize: token.fontSizeSM,
+            lineHeight: token.lineHeightSM,
+            color: token.colorTextLight3
+        },
+        '.__item-description': {
+            fontSize: token.fontSizeSM,
+            lineHeight: token.lineHeightSM,
+            color: token.colorTextLight3,
+            height: token.lineHeightSM * 3 * token.fontSizeSM,
+            display: '-webkit-box',
+            '-webkit-line-clamp': '3',
+            '-webkit-box-orient': 'vertical',
+            overflow: 'hidden',
+            marginBottom: token.marginSM
+        },
+        '.__item-tags-area': {
+            display: 'flex',
+            gap: token.sizeXS
+        },
+        '.__item-tag': {
+            marginRight: 0
+        },
+        '.__item-type': {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 16
+        },
+        '.__item-connect': {
+            display: 'flex',
+            justifyContent: 'space-between',
+            '.__item-connect-button': {
+                display: 'flex',
+                alignItems: 'center',
+                gap: token.sizeXS
+            }
+        },
+
+        '&.-normal-mode:hover': {
+            backgroundColor: token.colorBgInput
+        },
+
+        // compact
+
+        '&.-compact-mode': {
+            display: 'flex',
+            overflow: 'hidden',
+            gap: token.sizeXS,
+            alignItems: 'center',
+
+            '.ant-image': {
+                width: 44,
+                height: 44,
+                minWidth: 44
+            },
+
+            '.__item-title-wrapper': {
+                display: 'flex',
+                alignItems: 'center',
+                gap: token.sizeXS
+            },
+
+            '.__item-tags-area': {
+                gap: token.sizeXXS
+            }
+        }
+    };
+});
+
 export default ChainItem;

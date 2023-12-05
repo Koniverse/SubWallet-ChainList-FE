@@ -1,8 +1,7 @@
 .idea
 node_modules/
 .cache/
-public
-src/gatsby-types.d.ts
+build/
 .env
 yarn.lock
 

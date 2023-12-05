@@ -1,10 +1,11 @@
 import {notification} from "@subwallet/react-ui";
-import {NotificationContext} from "../contexts";
-import React from "react";
+import React, {createContext} from "react";
+import {NotificationInstance} from "@subwallet/react-ui/es/notification/interface";
 
 interface Props {
   children: React.ReactElement
 }
+export const NotificationContext = createContext<NotificationInstance>({} as unknown as NotificationInstance)
 
 export function NotificationProvider({children}: Props) {
   const [notify, contextHolder] = notification.useNotification({

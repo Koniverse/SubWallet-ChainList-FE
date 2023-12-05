@@ -5,7 +5,5 @@ import {createContext} from 'react';
 import {NotificationInstance} from "@subwallet/react-ui/es/notification/interface";
 export interface AppContextType {
 }
-export const AppContext = createContext<AppContextType>({
-})
 
 export const NotificationContext = createContext<NotificationInstance>({} as unknown as NotificationInstance)

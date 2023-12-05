@@ -1,0 +1,163 @@
+import CN from 'classnames';
+import React, {useContext} from 'react';
+import styled from 'styled-components';
+import {ThemeProps} from "../../types";
+import Header from "./Header";
+import {AppContext} from "../../providers/AppStateProvider";
+import {useSelector} from "react-redux";
+import {RootState} from "../../stores";
+import {ReduxStatus} from "../../stores/types";
+
+
+export interface LayoutBaseWebProps {
+    children: React.ReactNode | React.ReactNode[];
+    className?: string;
+}
+
+const StyledLayout = styled('div')<ThemeProps>(({theme: {extendToken, token}}: ThemeProps) => {
+    return {
+        display: 'flex',
+        flex: 'auto',
+        position: 'relative',
+        backgroundColor: extendToken.bodyBackgroundColor,
+
+        '.web-layout-header, .web-layout-header-simple': {
+            position: 'relative',
+            zIndex: 10
+        },
+
+        '.web-layout-background': {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 0,
+            transitionDuration: 'background-color 0.3s ease',
+            background: extendToken.tokensScreenInfoBackgroundColor,
+
+            '&.__background-common': {
+                background: token.colorBgDefault
+            },
+            '&.__background-info': {
+                background: extendToken.tokensScreenInfoBackgroundColor
+            },
+            '&.__background-increase': {
+                background: extendToken.tokensScreenSuccessBackgroundColor
+            },
+            '&.__background-decrease': {
+                background: extendToken.tokensScreenDangerBackgroundColor
+            }
+        },
+
+        '&.web-layout-container': {
+            // display: 'flex',
+            minHeight: '100%',
+            // flexDirection: 'column'
+        },
+
+        '.web-layout-body': {
+            position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'auto',
+            flex: 1
+        },
+
+        '&.header-type-common .web-layout-body': {
+            height: '100%',
+            width: '100%'
+        },
+
+        '.web-layout-header': {
+            flex: 0,
+            padding: '24px',
+        },
+
+        '.web-layout-content': {
+            flex: 1,
+            marginLeft: '164px',
+            marginRight: '164px',
+            height: '100%',
+            overflow: 'auto',
+
+            '&.__with-padding': {
+                padding: '0px 44px'
+            }
+        },
+
+        '.setting-pages .ant-sw-screen-layout-body, .setting-pages .ant-sw-screen-layout-footer': {
+            margin: '0 auto',
+            width: extendToken.bigOneColumnWidth,
+            maxWidth: '100%'
+        },
+
+        '.web-cancel-fill-height .ant-sw-screen-layout-body': {
+            flex: 'initial'
+        },
+
+        '.ant-sw-screen-layout-container': {
+            backgroundColor: 'transparent'
+        },
+
+        '.left-acton': {
+            display: 'flex',
+            width: '110px',
+            justifyContent: "space-between",
+        },
+
+        '.ant-sw-screen-layout-body': {
+            display: 'flex',
+            flexDirection: 'column'
+        },
+
+        '.web-single-column': {
+            '.ant-sw-screen-layout-body, .ant-sw-screen-layout-footer': {
+                width: extendToken.oneColumnWidth,
+                maxWidth: '100%',
+                marginLeft: 'auto',
+                marginRight: 'auto'
+            }
+        },
+
+        // Custom layout header
+        '.ant-sw-screen-layout-header .ant-sw-header-container-center': {
+            paddingTop: token.paddingLG,
+            paddingBottom: token.paddingLG,
+
+            '.ant-sw-header-left-part': {
+                marginLeft: 0
+            },
+
+            '.ant-sw-header-center-part': {
+                right: 'initial',
+                left: 40,
+                width: 'auto',
+
+                '.ant-sw-sub-header-title-content': {
+                    fontSize: 30
+                }
+            }
+        }
+    };
+});
+
+const BaseWeb = ({children}: LayoutBaseWebProps) => {
+    const {title, onBack, showBackButtonOnHeader} = useContext(AppContext);
+    const {reduxStatus} = useSelector((state: RootState) => state.chainStore);
+
+    return (
+        <StyledLayout className={CN('web-layout-container')}>
+            <div className={CN('web-layout-background')}/>
+
+            <div className={CN('web-layout-body')}>
+                {reduxStatus === ReduxStatus.READY && <Header title={title} onBack={onBack} showBackButton={showBackButtonOnHeader}/>}
+                <div className={CN('web-layout-content')}>
+                    {children}
+                </div>
+            </div>
+        </StyledLayout>
+    );
+};
+
+export default BaseWeb;

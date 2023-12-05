@@ -4,35 +4,66 @@
   "private": true,
   "description": "SubWallet-ChainList-FE",
   "author": "trieunhu",
-  "keywords": [
-    "gatsby"
-  ],
-  "scripts": {
-    "develop": "gatsby develop",
-    "start": "gatsby clean && gatsby develop",
-    "build": "gatsby clean && gatsby build",
-    "serve": "gatsby serve",
-    "clean": "gatsby clean",
-    "typecheck": "tsc --noEmit"
-  },
   "dependencies": {
-    "@ant-design/icons": "^5.2.6",
+    "@ant-design/icons": "^5.2.5",
     "@polkadot/api": "^10.10.1",
+    "@polkadot/rpc-provider": "^10.10.1",
     "@subwallet/react-ui": "^5.1.2-b74",
-    "gatsby": "^5.12.4",
-    "gatsby-plugin-image": "^3.12.3",
-    "gatsby-plugin-sharp": "^5.12.3",
-    "gatsby-source-strapi": "^3.3.1",
-    "gatsby-transformer-sharp": "^5.12.3",
+    "@subwallet/wallet-connect": "0.2.4",
+    "@tanstack/react-query": "^5.8.4",
+    "axios": "^1.6.1",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.40",
+    "@types/react": "^18.2.20",
+    "echarts": "^5.4.3",
+    "echarts-for-react": "^3.0.2",
+    "moment-timezone": "^0.5.40",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.15.0",
+    "react-scripts": "5.0.1",
+    "styled-components": "^5.3.6",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4",
+    "react-i18next": "^11.15.3",
+    "react-tabs": "^6.0.0",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.0",
+    "redux-persist": "^6.0.0",
+    "redux-toolkit": "^1.1.2-1",
+    "@reduxjs/toolkit": "^1.9.1"
   },
   "devDependencies": {
-    "@types/node": "^20.3.3",
-    "@types/react": "^18.2.14",
-    "@types/react-dom": "^18.2.6",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@polkadot/api": "^10.10.1",
     "@types/styled-components": "^5.1.29",
-    "typescript": "^5.1.6"
+    "@types/react-redux": "^7.1.24"
   },
-  "packageManager": "yarn@3.4.1"
+  "scripts": {
+    "start": "PORT=3006 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
