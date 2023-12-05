@@ -39,9 +39,9 @@ function Component(props: Props): React.ReactElement<Props> {
         >
             <div className={'__item-header'}>
                 <Image
-                    height={'100%'}
+                    height={40}
                     src={chain.icon.data.attributes.url}
-                    width={'100%'}
+                    width={40}
                 />
                 <div className={'__item-title-group'}>
                     <div className='__item-title'>
