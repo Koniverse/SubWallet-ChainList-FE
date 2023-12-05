@@ -175,7 +175,6 @@ export function ThemeProvider({children}: ThemeProviderProps): React.ReactElemen
     }, [themeName]);
     return (
         <ConfigProvider
-            getModalContainer={getModalContainer}
             getPopupContainer={getPopupContainer}
             theme={themeConfig}
         >

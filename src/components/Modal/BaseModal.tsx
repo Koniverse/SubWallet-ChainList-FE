@@ -12,10 +12,8 @@ type Props = ThemeProps & SwModalProps & {
     fullSize?: boolean;
 };
 
-function Component({children, className, fullSize, motion, ...props}: Props): React.ReactElement<Props> {
+function Component({children, className, fullSize, ...props}: Props): React.ReactElement<Props> {
     const isWebUI = true;
-
-    const _motion = motion || (isWebUI ? 'move-right' : undefined);
 
     return (
         <SwModal
@@ -25,7 +23,6 @@ function Component({children, className, fullSize, motion, ...props}: Props): Re
                 '-mobile': !isWebUI,
                 '-full-Size': fullSize
             })}
-            motion={_motion}
             width={'100%'}
         >
             {children}

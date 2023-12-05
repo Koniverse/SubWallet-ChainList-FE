@@ -24,9 +24,9 @@ function Component({
                    }: Props): React.ReactElement<Props> {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const goHome = () => {
+    const goHome = useCallback(() => {
         navigate('/');
-    }
+    }, [navigate]);
 
     const defaultOnBack = useCallback(() => {
         goHome();

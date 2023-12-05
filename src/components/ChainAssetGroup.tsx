@@ -31,8 +31,8 @@ const Component: React.FC<NetworkGroupProps> = (props: NetworkGroupProps) => {
               >
                 <Image
                     src={item.icon.data.attributes.url}
-                    height={24}
-                    width={24}
+                    height={16}
+                    width={16}
                 />
               </div>
             );

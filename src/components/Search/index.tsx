@@ -1,6 +1,6 @@
 import { Button, Icon, Input } from '@subwallet/react-ui';
 import CN from 'classnames';
-import { DownloadSimple, MagnifyingGlass, ShareNetwork } from 'phosphor-react';
+import { DownloadSimple, MagnifyingGlass } from 'phosphor-react';
 import React, { ChangeEventHandler, useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 import { ThemeProps } from '../../types';

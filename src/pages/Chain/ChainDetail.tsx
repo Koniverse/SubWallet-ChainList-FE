@@ -40,7 +40,10 @@ const Component = () => {
     const [searchInput, setSearchInput] = useState<string>('');
     const handleSearch = useCallback((value: string) => setSearchInput(value), [setSearchInput]);
     const navigate = useNavigate();
-    const [chain, setChain] = useState<ChainDetailType>({} as ChainDetailType)
+    const [chain, setChain] = useState<ChainDetailType>({} as ChainDetailType);
+    const goBack = useCallback(() => {
+        navigate('/');
+    }, [navigate]);
     useEffect(() => {
         const getChain = async () => {
             const chainData = chainList.find((chain) => chain.slug === slug);
@@ -68,10 +71,8 @@ const Component = () => {
         setShowBackButtonOnHeader(true);
         setOnBack(goBack);
         getChain();
-    }, [slug, chainList]);
-    const goBack = () => {
-        navigate('/');
-    }
+    }, [slug, chainList, setTitle, t, setShowBackButtonOnHeader, setOnBack, goBack]);
+
     return (
         <div className={'__chain-detail'}>
             <div className={'__chain-info'}>

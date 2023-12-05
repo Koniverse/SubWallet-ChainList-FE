@@ -19,7 +19,7 @@ const Component = ({chain, className}: Props) => {
     const urls = chain && chain.providers.length > 0 ? chain.providers.map((provider) => provider.url) : [];
     const providerConnectionStatus = useApiPromiseData(urls)
     const {t} = useTranslation();
-    const [searchInput, setSearchInput] = useState<string>('');
+    const [searchInput, ] = useState<string>('');
     const filterFunction = useCallback((item: any) => {
         return true;
     }, []);

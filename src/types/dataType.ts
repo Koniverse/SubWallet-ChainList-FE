@@ -1,4 +1,3 @@
-import {PhosphorIcon} from "./index";
 import {TagProps} from "@subwallet/react-ui";
 import {IconProps} from "phosphor-react";
 import React from "react";
