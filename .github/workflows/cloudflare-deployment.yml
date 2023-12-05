@@ -39,5 +39,5 @@ jobs:
           projectName: 'subwallet-chainlist-fe'
           gitHubToken: ${{ secrets.GH_AUTOMATION_TOKEN }}
           branch: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || github.ref_name }}
-          directory: './public'
+          directory: './build'
           wranglerVersion: '3'
