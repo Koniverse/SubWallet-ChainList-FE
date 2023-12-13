@@ -1,6 +1,3 @@
-// Copyright 2019-2022 @polkadot/extension-ui authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
 import { BalanceItemProps, Number } from '@subwallet/react-ui';
 import classNames from 'classnames';
 import React, { Context, useContext } from 'react';
@@ -18,10 +15,6 @@ function Component (
   { className = '',
     pastValue,
     value }: Props) {
-  // todo: Update BalanceItem in react-ui lib
-  // - loading
-  // - auto detect logo, only use logoKey
-  // - price change status
 
   const token = useContext<Theme>(ThemeContext as Context<Theme>).token;
   const priceChangeStatus = (() => {

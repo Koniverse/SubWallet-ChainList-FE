@@ -23,10 +23,6 @@ function Component(
         id,
         symbol
     } = props;
-    // todo: Update BalanceItem in react-ui lib
-    // - loading
-    // - auto detect logo, only use logoKey
-    // - price change status
 
     return (
         <div className={classNames('token-item-container', className)}>

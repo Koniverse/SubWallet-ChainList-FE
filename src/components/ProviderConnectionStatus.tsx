@@ -66,12 +66,15 @@ const ProviderConnectionStatus = styled(Component)<Props>(({ theme: { token } }:
     },
     '&.provider-connection-status.connected': {
       color: '#4CEAAC',
+      backgroundColor: convertHexColorToRGBA('#4CEAAC', 0.1),
     },
     '&.provider-connection-status.checking': {
       color: token['gold-6'],
+      backgroundColor: convertHexColorToRGBA(token['gray-6'], 0.1)
     },
     '&.provider-connection-status.fail': {
       color: '#E11A1A',
+      backgroundColor: convertHexColorToRGBA('#E11A1A', 0.1),
     }
   };
 });

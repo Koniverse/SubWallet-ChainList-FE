@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import {ThemeProps} from "../../types";
 import Header from "./Header";
 import {AppContext} from "../../providers/AppStateProvider";
-import {useSelector} from "react-redux";
-import {RootState} from "../../stores";
-import {ReduxStatus} from "../../stores/types";
+import {DataContext} from "../../providers/DataContext";
 
 
 export interface LayoutBaseWebProps {
@@ -144,14 +142,14 @@ const StyledLayout = styled('div')<ThemeProps>(({theme: {extendToken, token}}: T
 
 const BaseWeb = ({children}: LayoutBaseWebProps) => {
     const {title, onBack, showBackButtonOnHeader} = useContext(AppContext);
-    const {reduxStatus} = useSelector((state: RootState) => state.chainStore);
+    const {isReady} = useContext(DataContext);
 
     return (
         <StyledLayout className={CN('web-layout-container')}>
-            <div className={CN('web-layout-background')}/>
+            {isReady && title && <div className={CN('web-layout-background')}/>}
 
             <div className={CN('web-layout-body')}>
-                {reduxStatus === ReduxStatus.READY && <Header title={title} onBack={onBack} showBackButton={showBackButtonOnHeader}/>}
+                {isReady && title && <Header title={title} onBack={onBack} showBackButton={showBackButtonOnHeader}/>}
                 <div className={CN('web-layout-content')}>
                     {children}
                 </div>

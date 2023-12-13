@@ -156,8 +156,6 @@ function ThemeGenerator({children, themeConfig}: Props): React.ReactElement<Prop
 export interface ThemeProviderProps {
     children: React.ReactNode;
 }
-
-const getModalContainer = () => document.getElementById('popup-container') || document.body;
 const getPopupContainer = () => document.getElementById('tooltip-container') || document.body;
 
 const TooltipContainer = styled.div`z-index: 10000`;

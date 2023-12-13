@@ -1,28 +1,30 @@
 import {Button, Icon, SwList, Typography} from "@subwallet/react-ui";
 import * as React from "react";
-import {Chain, ConnectionStatus} from "../../types/dataType";
-import {useCallback, useState} from "react";
+import {Chain, ConnectionStatus, Provider} from "../../types/dataType";
+import {useCallback} from "react";
 import styled from "styled-components";
 import {ThemeProps} from "../../types";
 import CN from "classnames";
-import {PlusCircle, ShareNetwork} from "phosphor-react";
+import {AddressBook, ShareNetwork} from "phosphor-react";
 import ProviderConnectionStatus from "../ProviderConnectionStatus";
 import {useTranslation} from "react-i18next";
 import useApiPromiseData from "../../hooks/useApiPromiseData";
 import {convertHexColorToRGBA} from "../../libs";
+import ButtonBackground from "../../Button/ButtonBackground";
 
 interface Props extends ThemeProps {
     chain: Chain
+    searchInput?: string
 }
 
-const Component = ({chain, className}: Props) => {
+const Component = ({chain, searchInput, className}: Props) => {
     const urls = chain && chain.providers.length > 0 ? chain.providers.map((provider) => provider.url) : [];
     const providerConnectionStatus = useApiPromiseData(urls)
     const {t} = useTranslation();
-    const [searchInput, ] = useState<string>('');
-    const filterFunction = useCallback((item: any) => {
-        return true;
-    }, []);
+    const filterFunction = useCallback((item: Provider) => {
+        if (!searchInput) return true;
+        return item.name.toLowerCase().includes(searchInput.toLowerCase());
+    }, [searchInput]);
     const searchFunction = useCallback((item: any) => {
         return true;
     }, []);
@@ -35,7 +37,7 @@ const Component = ({chain, className}: Props) => {
             </div>
         );
     }, [t]);
-    const renderEarningItem = useCallback((item: any) => {
+    const renderItem = useCallback((item: any) => {
         let value = {
             status: ConnectionStatus.CHECKING
         }
@@ -78,16 +80,16 @@ const Component = ({chain, className}: Props) => {
                             </div>
                         </div>
                     </div>
-                    <Button
+                    <ButtonBackground
                         icon={(
                             <Icon
-                                phosphorIcon={PlusCircle}
-                                size={'sm'}
+                                phosphorIcon={AddressBook}
+                                size={'xs'}
                                 weight={'fill'}
                             />
                         )}
                         shape={'circle'}
-                        type='ghost'
+                        type='primary'
                         size={'xs'}
                     />
                 </div>
@@ -104,7 +106,7 @@ const Component = ({chain, className}: Props) => {
                 gridGap={'8px'}
                 list={chain.providers}
                 minColumnWidth={'360px'}
-                renderItem={renderEarningItem}
+                renderItem={renderItem}
                 renderOnScroll={true}
                 renderWhenEmpty={renderWhenEmpty}
                 searchBy={searchFunction}
@@ -121,28 +123,34 @@ const ProviderList = styled(Component)<ThemeProps>(({theme: {extendToken, token}
             '.__item_provider': {
                 padding: '12px 8px 12px 16px',
                 marginBottom: 12,
-                backgroundColor: extendToken.boxBackgroundColor,
+                backgroundColor: token.colorBgSecondary,
                 '.__provider-content': {
                     display: 'flex',
                     justifyContent: 'space-between',
+                    alignItems: 'center',
                     '.__item-data': {
                         display: 'flex',
-                        '.provider-button-first': {
-                            borderRadius: '50%',
-                            width: 32,
-                            height: 32,
-                            '&.connected': {
-                                color: '#4CEAAC',
-                                backgroundColor: 'rgba(76, 234, 172, 0.1)'
-                            },
+                        alignItems: 'center',
+                        '.__item-share': {
+                            marginRight: 12,
 
-                            '&.checking': {
-                                color: token['gold-6'],
-                                backgroundColor: convertHexColorToRGBA(token['gray-6'], 0.1)
-                            },
-                            '&.fail': {
-                                color: '#E11A1A',
-                                backgroundColor: 'rgba(191, 22, 22, 0.1)'
+                            '.provider-button-first': {
+                                borderRadius: '50%',
+                                width: 32,
+                                height: 32,
+                                '&.connected': {
+                                    color: '#4CEAAC',
+                                    backgroundColor: 'rgba(76, 234, 172, 0.1)'
+                                },
+
+                                '&.checking': {
+                                    color: token['gold-6'],
+                                    backgroundColor: convertHexColorToRGBA(token['gray-6'], 0.1)
+                                },
+                                '&.fail': {
+                                    color: '#E11A1A',
+                                    backgroundColor: 'rgba(191, 22, 22, 0.1)'
+                                },
                             },
                         },
                         '.__item-value': {

@@ -27,7 +27,6 @@ export interface ExtraToken {
     bigOneColumnWidth: number,
     twoColumnWidth: number,
     bodyBackgroundColor: string,
-    boxBackgroundColor: string,
     logo: string,
     defaultImagePlaceholder: string
     tokensScreenSuccessBackgroundColor: string,
@@ -77,7 +76,6 @@ function genDefaultExtraTokens(token: AliasToken): ExtraToken {
         bigOneColumnWidth: 600,
         twoColumnWidth: 820,
         bodyBackgroundColor: '#0C0C0C',
-        boxBackgroundColor: '#1A1A1A',
         logo: subWalletLogo,
         defaultImagePlaceholder,
         tokensScreenSuccessBackgroundColor: 'linear-gradient(180deg, rgba(76, 234, 172, 0.10) 5%, rgba(217, 217, 217, 0.00) 33%)',

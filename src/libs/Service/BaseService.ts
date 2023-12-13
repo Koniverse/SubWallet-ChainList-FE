@@ -13,7 +13,7 @@ type Params = {
 
 export class BaseService {
     path = () => '';
-    async find(filters: any, populate: string| string[] | null = null, pagination: {page?: number, limit?: number} | null = null, sort: any = null) {
+    async find(filters: any, populate: string| any | null = null, pagination: {page?: number, limit?: number} | null = null, sort: any = null) {
         const params: Params = {filters: filters}
         if (populate){
             params.populate = populate

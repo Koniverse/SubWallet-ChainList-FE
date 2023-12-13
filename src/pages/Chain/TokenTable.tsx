@@ -1,25 +1,30 @@
 import {ThemeProps} from "../../types";
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import styled from "styled-components";
 import DetailTable from "./DetailTable";
 import {useTranslation} from "react-i18next";
-import {Button, Icon} from "@subwallet/react-ui";
+import {Button, Icon, ModalContext} from "@subwallet/react-ui";
 import {PlusCircle} from "phosphor-react";
 import {ChainAsset} from "../../types/dataType";
 import {TokenPrice} from "../../components/Token/TokenPrice";
 import {TokenItem} from "../../components/Token/TokenItem";
 import axios from "axios";
 import {URL_DATA_GET_PRICE_TOKEN} from "../../libs/utils/constant";
+import {TokenDetailModal} from "./TokenDetailModal";
+import CN from "classnames";
 
 type Props = ThemeProps & {
     chainAssetList: ChainAsset[];
     searchInput?: string;
     chainSlug?: string;
 };
+const TokenDetailModalId = 'tokenDetailModalId';
 
-const Component = ({chainAssetList, searchInput, chainSlug}: Props) => {
+const Component = ({chainAssetList, searchInput, chainSlug, className}: Props) => {
     const {t} = useTranslation();
+    const {activeModal, inactiveModal} = useContext(ModalContext);
     const [currentPrice, setCurrentPrice] = useState(0);
+    const [tokenDetail, setTokenDetail] = useState<ChainAsset | undefined>(undefined);
     const [pastPrice, setPastPrice] = useState(0);
     const filteredList = useMemo(() => {
         return chainAssetList && chainAssetList.filter((item) => {
@@ -36,26 +41,33 @@ const Component = ({chainAssetList, searchInput, chainSlug}: Props) => {
                 const response = await axios.get(url);
                 if (response.data && response.data.length > 0) {
                     const {current_price, price_change_24h} = response.data[0];
+                    console.log('current_price', current_price);
+                    console.log('price_change_24h', price_change_24h);
                     setCurrentPrice(current_price);
-                    setPastPrice(current_price + price_change_24h);
+                    setPastPrice(current_price - price_change_24h);
                 }
-            }catch (e) {
+            } catch (e) {
                 return;
             }
         }
         getDataPrice();
     }, [chainSlug]);
-    let onClickItem = (item: any) => {
-
+    const onCloseDetail = useCallback(() => {
+        setTokenDetail(undefined);
+        inactiveModal(TokenDetailModalId);
+    }, [inactiveModal]);
+    let onClickItem = (item: ChainAsset) => {
+        setTokenDetail(item);
+        activeModal(TokenDetailModalId);
     };
     return (
-        <>
+        <div className={CN(className)}>
             <DetailTable
                 columns={[
                     {
                         title: t<string>('Tokens'),
-                        dataIndex: 'name',
-                        key: 'name',
+                        dataIndex: 'token',
+                        key: 'token',
                         render: (_, row) => {
                             return (
                                 <TokenItem
@@ -69,7 +81,7 @@ const Component = ({chainAssetList, searchInput, chainSlug}: Props) => {
                     },
                     {
                         title: t<string>('Token name'),
-                        dataIndex: 'numberProviders',
+                        dataIndex: 'tokenName',
                         className: '__center-col',
                         render: (_, row) => {
                             return (
@@ -107,8 +119,6 @@ const Component = ({chainAssetList, searchInput, chainSlug}: Props) => {
                     {
                         render: (_, row) => {
                             return (
-
-
                                 <Button
                                     icon={(
                                         <Icon
@@ -128,7 +138,14 @@ const Component = ({chainAssetList, searchInput, chainSlug}: Props) => {
                 dataSource={filteredList}
                 onClick={onClickItem}
             />
-        </>
+            {tokenDetail && <TokenDetailModal
+                tokenDetail={tokenDetail}
+                id={TokenDetailModalId}
+                onCancel={onCloseDetail}
+                currentPrice={currentPrice}
+                pastPrice={pastPrice}
+            />}
+        </div>
     )
 }
 
@@ -141,6 +158,24 @@ const TokenTable = styled(Component)<ThemeProps>(({theme: {extendToken, token}}:
         '.ant-table .ant-table-content table .ant-table-row .ant-table-cell.__center-col': {
             textAlign: 'center'
         },
+
+        '.ant-table-wrapper .ant-pagination ':{
+            '.ant-pagination-item':{
+                display: "none",
+            },
+            '.ant-pagination-prev':{
+                'button': {
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.12)'
+                }
+            },
+            '.ant-pagination-next':{
+                'button': {
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(255, 255, 255, 0.12)'
+                }
+            }
+        }
     }
 });
 export default TokenTable;

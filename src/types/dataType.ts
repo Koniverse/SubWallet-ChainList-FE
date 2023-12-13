@@ -1,12 +1,69 @@
 import {TagProps} from "@subwallet/react-ui";
 import {IconProps} from "phosphor-react";
 import React from "react";
+import {PhosphorIcon} from "./index";
 
 export interface Provider {
     id: string
     name: string
     url: string
 }
+
+export enum BuyTokenSupport {
+    ETHEREUM = 'ETHEREUM',
+    SUBSTRATE = 'SUBSTRATE',
+}
+
+export enum CrowdloanStatus {
+    WON = 'won',
+    IN_AUCTION = 'in_auction',
+    FAILED = 'failed',
+    WITHDRAW = 'withdraw',
+}
+
+export interface CrowdloanType {
+    id: number,
+    paraId: number,
+    fundId: string,
+    status: CrowdloanStatus,
+    metadata: object,
+    relayChain: string,
+    auctionIndex: number,
+    firstPeriod: number,
+    lastPeriod: number,
+    startTime: Date,
+    endTime: Date,
+    chain: {
+        data: {
+            id: number,
+            attributes: Chain
+        }
+    }
+}
+
+export interface BuyServiceInfo {
+    id: number,
+    name: string,
+    slug: string,
+    contractUrl: string,
+    isSuspended: boolean,
+    symbol: string,
+    network: string,
+    service: string,
+}
+
+export interface BuyTokenConfig {
+    id: number,
+    chain_asset: {
+        data: {
+            attributes: ChainAsset,
+            id: number
+        }
+    },
+    support: BuyTokenSupport,
+    services: BuyServiceInfo[],
+}
+
 export interface ChainAsset {
     id: string,
     name: string,
@@ -25,8 +82,25 @@ export interface ChainAsset {
             }
         }
     },
+    metadata: {
+        assetId: string,
+        assetType: string,
+        contractAddress: string,
+    },
+    buyTokenConfigs: BuyTokenConfig[]
     assetType: string,
+    assetRefs: {
+        id: number,
+        type: string,
+        destAsset: {
+            data: {
+                attributes: ChainAsset,
+                id: number
+            }
+        }
+    }[]
 }
+
 export interface Chain {
     id: string,
     name: string,
@@ -66,7 +140,8 @@ export interface Chain {
         supportSmartContract: any
     },
     providers: Provider[],
-    chainAsset: ChainAsset[]
+    chainAsset: ChainAsset[],
+    crowdLoanList: CrowdloanType[],
 }
 
 
@@ -93,14 +168,24 @@ export interface ChainTagType {
     color: TagProps['color'];
     weight: IconProps['weight'];
 }
+
 export interface ProviderConnectionType {
     label: string;
     color: TagProps['color'];
 }
+
+export interface CrowdloanTagType {
+    label: string;
+    color: TagProps['color'];
+    icon: PhosphorIcon;
+    weight: IconProps['weight'];
+}
+
 export interface DataType {
     id: number;
     attributes: any;
 }
+
 export interface ResponseDataType {
     data: DataType[]
 }

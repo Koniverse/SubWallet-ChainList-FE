@@ -8,7 +8,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {AppContext} from "../../providers/AppStateProvider";
 import {useTranslation} from "react-i18next";
 import {ThemeProps} from "../../types";
-import {Button, Icon, Image, Typography} from "@subwallet/react-ui";
+import {Button, Icon, Image, Popover, Typography} from "@subwallet/react-ui";
 import PageWrapper from "../../components/Layout/PageWrapper";
 import styled from "styled-components";
 import Logo2D from "../../components/Logo/Logo2D";
@@ -18,8 +18,9 @@ import NetworkType from "../../components/Icon/NetworkType";
 import {useSelector} from "react-redux";
 import {RootState} from "../../stores";
 import ProviderList from "../../components/Chain/ProviderList";
-import {MagnifyingGlass} from "phosphor-react";
+import {MagnifyingGlass, X} from "phosphor-react";
 import Search from "../../components/Search";
+import ClowdloanTable from "./ClowdloanTable";
 
 interface ChainDetailType extends Chain {
     addressPrefix: string,
@@ -37,10 +38,16 @@ const Component = () => {
     const {chainList} = useSelector((state: RootState) => state.chainStore);
     const {t} = useTranslation();
     const {setShowBackButtonOnHeader, setOnBack, setTitle} = useContext(AppContext);
-    const [searchInput, setSearchInput] = useState<string>('');
-    const handleSearch = useCallback((value: string) => setSearchInput(value), [setSearchInput]);
+    const [searchInput] = useState<string>('');
+    const [searchInputProvider, setSearchInputProvider] = useState<string>('');
+    const handleSearch = useCallback((value: string) => setSearchInputProvider(value), [setSearchInputProvider]);
     const navigate = useNavigate();
     const [chain, setChain] = useState<ChainDetailType>({} as ChainDetailType);
+    const [showSearchProvider, setShowSearchProvider] = useState(false)
+    const handleHoverIconProviderSearch = useCallback(
+        (visible: boolean) => {
+            setShowSearchProvider(visible)
+        }, [setShowSearchProvider]);
     const goBack = useCallback(() => {
         navigate('/');
     }, [navigate]);
@@ -157,33 +164,47 @@ const Component = () => {
                 </div>
             </div>
             <div className="__data-list">
-                <div className='__token_list'>
-                    <div className="__token_header">
-                        <div className="__token_title">
-                            <Typography.Title level={4}>{t('Token list')}</Typography.Title>
+                <div className="__left-section">
+                    <div className='__token_list'>
+                        <div className="__token_header">
+                            <div className="__token_title">
+                                <Typography.Title level={4}>{t('Token list')}</Typography.Title>
+                            </div>
+                            <div className="__token_search">
+                                <Search
+                                    actionBtnIcon={(
+                                        <Icon
+                                            phosphorIcon={MagnifyingGlass}
+                                            size='sm'
+                                            iconColor={'#fff'}
+                                        />
+                                    )}
+                                    onClickActionBtn={() => {
+                                    }}
+                                    onSearch={handleSearch}
+                                    placeholder={t('Token name ...')}
+                                    searchValue={searchInput}
+                                    showActionBtn
+                                />
+                            </div>
                         </div>
-                        <div className="__token_search">
-                            <Search
-                                actionBtnIcon={(
-                                    <Icon
-                                        phosphorIcon={MagnifyingGlass}
-                                        size='sm'
-                                    />
-                                )}
-                                onClickActionBtn={() => {
-                                }}
-                                onSearch={handleSearch}
-                                placeholder={t('Token name ...')}
-                                searchValue={searchInput}
-                                showActionBtn
+                        <div className="__items token-table">
+                            <TokenTable chainAssetList={chain.chainAsset}
+                                        searchInput={searchInputProvider}
+                                        chainSlug={slug}
                             />
                         </div>
                     </div>
-                    <div className="__items token-table">
-                        <TokenTable chainAssetList={chain.chainAsset}
-                                    searchInput={searchInput}
-                                    chainSlug={slug}
-                        />
+
+                    <div className='__crowdloan_list'>
+                        <div className="__item_header">
+                            <div className="__item_title">
+                                <Typography.Title level={4}>{t('Crowdloan funds')}</Typography.Title>
+                            </div>
+                        </div>
+                        <div className="__items token-table">
+                            <ClowdloanTable crowdLoanList={chain.crowdLoanList}/>
+                        </div>
                     </div>
                 </div>
                 <div className="__providers_list">
@@ -191,9 +212,48 @@ const Component = () => {
                         <div className="__providers_title">
                             <Typography.Title level={4}>{t('Providers')}</Typography.Title>
                         </div>
-                        <div className="__providers_content">
-                            {chain.providers && <ProviderList chain={chain}/>}
+
+                        <div className="__providers_search">
+                            {showSearchProvider &&
+                                <Search
+                                    actionBtnIcon={(
+                                        <Icon
+                                            phosphorIcon={X}
+                                            size='sm'
+                                            iconColor={'#fff'}
+                                        />
+                                    )}
+                                    onClickActionBtn={() => {
+                                        setShowSearchProvider(false);
+                                    }}
+                                    onSearch={handleSearch}
+                                    placeholder={t('Provider name ...')}
+                                    searchValue={searchInputProvider}
+                                    showActionBtn
+                                />
+                            }
+                            {!showSearchProvider &&
+                                <Popover onOpenChange={handleHoverIconProviderSearch}
+                                >
+                                    <Button
+                                        icon={(
+                                            <Icon
+                                                phosphorIcon={MagnifyingGlass}
+                                                size={'sm'}
+                                                iconColor={'#fff'}
+                                            />
+                                        )}
+                                        shape={'circle'}
+                                        type='ghost'
+                                        size={'xs'}
+                                    />
+                                </Popover>
+                            }
                         </div>
+                    </div>
+
+                    <div className="__providers_content">
+                        {chain.providers && <ProviderList chain={chain} searchInput={searchInputProvider}/>}
                     </div>
                 </div>
             </div>
@@ -225,9 +285,9 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
             flexDirection: 'row',
             alignItems: 'self-start',
             justifyContent: 'space-between',
-            backgroundColor: extendToken.boxBackgroundColor,
+            backgroundColor: token.colorBgSecondary,
             marginBottom: '24px',
-            borderRadius: '8px',
+            borderRadius: token.borderRadiusLG,
             '& > div': {
                 color: '#fff',
             },
@@ -277,52 +337,78 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
         },
         '.__data-list': {
             display: 'flex',
-
-            '.__token_list': {
-                display: 'flex',
-                flexDirection: 'column',
+            '.__left-section': {
                 flex: 2,
                 marginRight: '64px',
-                '.__token_header': {
+                '.__token_list': {
                     display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    '.__token_title h4.ant-typography': {
-                        fontSize: '24px',
-                        margin: 0,
-                    },
+                    flexDirection: 'column',
+
+                    '.__token_header': {
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        '.__token_title h4.ant-typography': {
+                            fontSize: '24px',
+                            margin: 0,
+                        },
 
 
-                    '.right-section': {
-                        '.search-input': {
-                            width: 264,
-                            height: 40,
-                            borderRadius: 20,
-                            '.ant-input': {
-                                paddingTop: 9,
-                                paddingBottom: 9,
+                        '.right-section': {
+                            '.search-input': {
+                                width: 264,
                                 height: 40,
-                            },
-                            '.ant-input-suffix': {
-                                height: 40,
-                            },
+                                borderRadius: 20,
+                                '.ant-input': {
+                                    paddingTop: 9,
+                                    paddingBottom: 9,
+                                    height: 40,
+                                },
+                                '.ant-input-suffix': {
+                                    height: 40,
+                                },
 
-                            '.ant-input-prefix': {
-                                display: 'none',
+                                '.ant-input-prefix': {
+                                    display: 'none',
+                                }
                             }
-                        }
-                    },
+                        },
+                    }
                 }
             },
             '.__providers_list': {
                 minWidth: 264,
                 '.__providers_header': {
+                    display: 'flex',
+                    justifyContent: 'space-between',
                     '.__providers_title': {
                         marginBottom: '24px',
                         'h4.ant-typography': {
                             fontSize: '24px',
                             margin: 0,
                         }
+                    },
+                    '.__providers_search': {
+                        marginLeft: 12,
+                        '.right-section': {
+                            '.search-input': {
+                                width: 264,
+                                height: 40,
+                                borderRadius: 20,
+                                '.ant-input': {
+                                    paddingTop: 9,
+                                    paddingBottom: 9,
+                                    height: 40,
+                                },
+                                '.ant-input-suffix': {
+                                    height: 40,
+                                },
+
+                                '.ant-input-prefix': {
+                                    display: 'none',
+                                }
+                            }
+                        },
                     },
 
                 }
