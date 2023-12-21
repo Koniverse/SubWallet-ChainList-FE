@@ -34,7 +34,7 @@ const Component = ({chain, searchInput, className}: Props) => {
                 key: index
             }
         })
-    }, [searchInput]);
+    }, [searchInput, chain]);
     const columns: ColumnsType<Provider> = [
         {
             title: t('Provider name'),

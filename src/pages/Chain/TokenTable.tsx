@@ -13,15 +13,17 @@ import {URL_DATA_GET_PRICE_TOKEN} from "../../libs/utils/constant";
 import {TokenDetailModal} from "./TokenDetailModal";
 import CN from "classnames";
 import ButtonBackground from "../../Button/ButtonBackground";
+import {TablePaginationConfig} from "@subwallet/react-ui/lib";
 
 type Props = ThemeProps & {
     chainAssetList: ChainAsset[];
     searchInput?: string;
     chainSlug?: string;
+    pagination?: TablePaginationConfig | false
 };
 const TokenDetailModalId = 'tokenDetailModalId';
 
-const Component = ({chainAssetList, searchInput, chainSlug, className}: Props) => {
+const Component = ({chainAssetList, searchInput, chainSlug, className, pagination}: Props) => {
     const {t} = useTranslation();
     const {activeModal, inactiveModal} = useContext(ModalContext);
     const [currentPrice, setCurrentPrice] = useState(0);
@@ -136,6 +138,7 @@ const Component = ({chainAssetList, searchInput, chainSlug, className}: Props) =
                 ]}
                 dataSource={filteredList}
                 onClick={onClickItem}
+                pagination={pagination ?? false}
             />
             {tokenDetail && <TokenDetailModal
                 tokenDetail={tokenDetail}

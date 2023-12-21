@@ -1,7 +1,7 @@
 // Copyright 2019-2022 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import {BalanceItemProps, Button, Icon, Image, Typography} from '@subwallet/react-ui';
+import {BalanceItemProps, Button, Icon, Typography} from '@subwallet/react-ui';
 import classNames from 'classnames';
 import React from 'react';
 import styled from 'styled-components';

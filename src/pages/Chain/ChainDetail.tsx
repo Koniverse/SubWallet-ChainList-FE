@@ -8,7 +8,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {AppContext} from "../../providers/AppStateProvider";
 import {useTranslation} from "react-i18next";
 import {ThemeProps} from "../../types";
-import {Button, Icon, Image, Popover, Typography} from "@subwallet/react-ui";
+import {Button, Col, Icon, Image, Popover, Row, Typography} from "@subwallet/react-ui";
 import PageWrapper from "../../components/Layout/PageWrapper";
 import styled from "styled-components";
 import Logo2D from "../../components/Logo/Logo2D";
@@ -18,7 +18,7 @@ import NetworkType from "../../components/Icon/NetworkType";
 import {useSelector} from "react-redux";
 import {RootState} from "../../stores";
 import ProviderList from "../../components/Chain/ProviderList";
-import { MagnifyingGlass, X} from "phosphor-react";
+import {MagnifyingGlass, X} from "phosphor-react";
 import Search from "../../components/Search";
 import ClowdloanTable from "./ClowdloanTable";
 import {ScreenContext, Screens} from "../../providers/ScreenContext";
@@ -52,7 +52,7 @@ const Component = () => {
     const navigate = useNavigate();
     const [chain, setChain] = useState<ChainDetailType>({} as ChainDetailType);
     const [showSearchProvider, setShowSearchProvider] = useState(false);
-    const {screenType, isWebUI} = useContext(ScreenContext);
+    const {screenType} = useContext(ScreenContext);
     const handleHoverIconProviderSearch = useCallback(
         (visible: boolean) => {
             setShowSearchProvider(visible)
@@ -99,7 +99,7 @@ const Component = () => {
     useEffect(() => {
         if (activeTabIndex === 0) {
             setSearchInput(searchInputAll);
-        }else if (activeTabIndex === 1){
+        } else if (activeTabIndex === 1) {
             setSearchInputProvider(searchInputAll);
         }
     }, [searchInputAll])
@@ -125,59 +125,54 @@ const Component = () => {
                         <div className='__item-title'>
                             <Typography.Title level={4}>{chain.name}</Typography.Title>
                         </div>
-
-                        <div className={'__item-group'}>
-                            <div className='__item-group-data'>
-                                Chain ID:
+                        <Row className='__item-data'>
+                            <Col span={8} className='__item-group'>
+                                <span className="__item-label">Chain ID:</span>
                                 <span className="__item-value">
                                     {chain.id}
                                 </span>
-                            </div>
-                            <div className='__item-group-data'>
-                                Address prefix: {chain.addressPrefix}
-                            </div>
-                            <div className='__item-group-data'>
-                                ParaID:
+                            </Col>
+                            <Col span={8} className='__item-group'>
+                                <span className="__item-label">Address prefix:</span> {chain.addressPrefix}
+                            </Col>
+                            <Col span={8} className='__item-group'>
+                                <span className="__item-label">ParaID:</span>
                                 <span className="__item-value">
                                     {chain.paraId}
                                 </span>
-                            </div>
-                        </div>
-                        <div className={'__item-group'}>
-                            <div className='__item-group-data'>
-                                Type:
+                            </Col>
+                            <Col span={8} className='__item-group'>
+                                <span className="__item-label">Type:</span>
                                 <span className="__item-type">
                                     <NetworkType type={chain.type}/>
                                 </span>
-                            </div>
-                            <div className='__item-group-data'>
-                                Decimals:
+                            </Col>
+                            <Col span={8} className='__item-group'>
+                                <span className="__item-label">Decimals:</span>
                                 <span className="__item-value">
                                     {chain.decimals}
                                 </span>
-                            </div>
-                            <div className='__item-group-data'>
-                                Symbol:
+                            </Col>
+                            <Col span={8} className='__item-group'>
+                                <span className="__item-label">Symbol:</span>
                                 <span className="__item-value">
                                     {chain.symbol}
                                 </span>
-                            </div>
-                        </div>
-                        <div className={'__item-group'}>
-                            <div className='__item-group-data'>
-                                Block explorer:
+                            </Col>
+                            <Col span={12} className='__item-group'>
+                                <span className="__item-label __full-width">Block explorer:</span>
                                 <span className="__item-value">
                                     {chain.blockExplorer}
                                 </span>
-                            </div>
-                            <div className='__item-group-data'>
-                                Crowdloan URL:
+                            </Col>
+                            <Col span={12} className='__item-group'>
+                                <span className="__item-label __full-width">Crowdloan URL:</span>
 
                                 <span className="__item-value">
                                     {chain.crowdloanUrl}
                                 </span>
-                            </div>
-                        </div>
+                            </Col>
+                        </Row>
                     </div>
                 </div>
 
@@ -235,7 +230,7 @@ const Component = () => {
                     }
                     {
                         activeTabIndex === 1 && chain.providers && <ProviderTable chain={chain}
-                                                                                 searchInput={searchInputProvider}/>
+                                                                                  searchInput={searchInputProvider}/>
                     }
                     {
                         activeTabIndex === 2 && <ClowdloanTable crowdLoanList={chain.crowdLoanList}/>
@@ -278,6 +273,7 @@ const Component = () => {
                             <TokenTable chainAssetList={chain.chainAsset}
                                         searchInput={searchInputProvider}
                                         chainSlug={slug}
+                                        pagination={{defaultPageSize: 10, showSizeChanger: false}}
                             />
                         </div>
                     </div>
@@ -382,26 +378,22 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
                 '.__item-group': {
                     display: 'flex',
                     gap: '12px',
-                    justifyContent: 'space-between',
                     marginBottom: '8px',
-
-                    '.__item-group-data': {
-                        display: 'flex',
-                        fontSize: '16px',
-                        lineHeight: '24px',
-                        minWidth: '100%',
-                        fontWeight: 600,
-                        color: '#FFFFFFD9',
-                        '.__item-value': {
-                            fontWeight: 500,
-                            color: '#FFFFFFA6',
-                            marginLeft: '12px',
-                        },
-                        '.__item-type': {
-                            marginLeft: '12px',
-                            display: 'flex',
-                        }
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    fontWeight: 600,
+                    color: '#FFFFFFD9',
+                    '.__item-value': {
+                        fontWeight: 500,
+                        color: '#FFFFFFA6',
+                        marginLeft: '12px',
+                        wordBreak: 'break-word',
                     },
+                    '.__item-type': {
+                        marginLeft: '12px',
+                        display: 'flex',
+                    }
+
                 },
                 '.__item-title': {
                     marginBottom: '8px',
@@ -424,7 +416,7 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
                 justifyContent: 'start',
                 flexDirection: 'column',
                 '.__item-group': {
-                    flexDirection: 'column',
+                    minWidth: '100%'
                 },
                 '.__item-button': {
                     margin: '0 auto',

@@ -103,7 +103,7 @@ const Simple = styled(Component)<Props>(({theme: {token}}: Props) => ({
     '.__left-part': {
         position: 'relative',
         zIndex: 5,
-        maxWidth: 180,
+        maxWidth: '6%',
         flex: 1,
         display: 'flex',
         alignItems: 'center',
