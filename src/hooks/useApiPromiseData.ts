@@ -11,18 +11,23 @@ const restartInterval = 1000 * 60;
 const getData = async (url: string) => {
 
     try {
-        let provider: ProviderInterface;
+        let provider: ProviderInterface| null = null;
         if (url.startsWith('light://')) {
             provider = getSubstrateConnectProvider(url.replace('light://substrate-connect/', ''));
+            console.log('provider', provider)
+            if (!provider) {
+                return {
+                    url, status: ConnectionStatus.FAIL
+                } as ProviderCollection;
+            }
             await provider.connect();
         } else {
             provider = new WsProvider(url);
         }
         await ApiPromise.create({provider});
-        const data = {
+        return {
             url, status: ConnectionStatus.CONNECTED
         } as ProviderCollection;
-        return data;
     } catch (e) {
         console.log('error', e)
         return {

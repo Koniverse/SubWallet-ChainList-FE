@@ -3,12 +3,14 @@
 
 import {Button, Icon} from '@subwallet/react-ui';
 import {CaretLeft, Question} from 'phosphor-react';
-import React, {useCallback} from 'react';
+import React, {useCallback, useContext} from 'react';
 import styled from 'styled-components';
 import {ThemeProps} from "../../../types";
 import {useTranslation} from "react-i18next";
 import Logo2D from "../../Logo/Logo2D";
 import {useNavigate} from "react-router-dom";
+import {ScreenContext, Screens} from "../../../providers/ScreenContext";
+import CN from "classnames";
 
 export type Props = ThemeProps & {
     title?: string | React.ReactNode;
@@ -24,6 +26,7 @@ function Component({
                    }: Props): React.ReactElement<Props> {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const {screenType} = useContext(ScreenContext);
     const goHome = useCallback(() => {
         navigate('/');
     }, [navigate]);
@@ -34,7 +37,7 @@ function Component({
     return (
         <div className={className}>
             <div className='__box'>
-                <div className={'__left-part'}>
+                <div className={CN('__left-part', screenType === Screens.MOBILE ? '__ui-mobile' : '')}>
                     <div
                         className='__logo'
                         onClick={goHome}
@@ -104,7 +107,10 @@ const Simple = styled(Component)<Props>(({theme: {token}}: Props) => ({
         flex: 1,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        '&.__ui-mobile': {
+            justifyContent: 'start'
+        }
     },
 
     '.__back-button.__back-button': {

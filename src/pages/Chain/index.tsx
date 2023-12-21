@@ -33,7 +33,7 @@ const Component = () => {
     const {t} = useTranslation();
     const {chainList} = useSelector((state: RootState) => state.chainStore);
     const [searchInput, setSearchInput] = useState<string>('');
-    const [activeTabIndex, setActiveTabIndex] = useState(0)
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
     const {setTitle, setShowBackButtonOnHeader} = useContext(AppContext);
     const handleSearch = useCallback((value: string) => setSearchInput(value), [setSearchInput]);
     const [filterTestnet, setFilterTestnet] = useState(FilterValue.ALL)
@@ -142,18 +142,14 @@ const Component = () => {
                     />
                 </div>
             </div>
-            <div className='portfolio-header'>
-                <div className='menu-bar'>
-                </div>
-            </div>
             <div className={'__chain-list-container'}>
                 {
-                    filteredList.map((i) => (
+                    filteredList.map((i, index) => (
                         <ChainItem
                             className={'__chain-item'}
                             compactMode={false}
                             chain={i}
-                            key={i.id}
+                            key={index}
                             {...i}
                         />
                     ))
@@ -200,10 +196,11 @@ const Chain = styled(WrapperComponent)<WrapperProps>(({theme: {extendToken, toke
         '.__chain-list-area': {
             flex: 1,
             marginTop: 32,
-            marginBottom: 40
+            marginBottom: 40,
         },
 
         '.__chain-list-container': {
+            marginTop: 32,
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
             alignItems: 'stretch',

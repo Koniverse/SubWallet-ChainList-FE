@@ -8,6 +8,7 @@ import {AppStateProvider} from "./providers/AppStateProvider";
 import NotificationProvider from './providers/NotificationProvider';
 import {DataContextProvider} from "./providers/DataContext";
 import {ModalContextProvider} from "@subwallet/react-ui";
+import { ScreenContextProvider } from './providers/ScreenContext';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -15,15 +16,17 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
         <DataContextProvider>
-            <ThemeProvider>
-                <ModalContextProvider>
-                    <NotificationProvider>
-                        <AppStateProvider>
-                            <RouterProvider router={router}/>
-                        </AppStateProvider>
-                    </NotificationProvider>
-                </ModalContextProvider>
-            </ThemeProvider>
+            <ScreenContextProvider>
+                <ThemeProvider>
+                    <ModalContextProvider>
+                        <NotificationProvider>
+                            <AppStateProvider>
+                                <RouterProvider router={router}/>
+                            </AppStateProvider>
+                        </NotificationProvider>
+                    </ModalContextProvider>
+                </ThemeProvider>
+            </ScreenContextProvider>
         </DataContextProvider>
     </React.StrictMode>
 );

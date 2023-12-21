@@ -5,6 +5,7 @@ import {ThemeProps} from "../../types";
 import Header from "./Header";
 import {AppContext} from "../../providers/AppStateProvider";
 import {DataContext} from "../../providers/DataContext";
+import {ScreenContext, Screens} from "../../providers/ScreenContext";
 
 
 export interface LayoutBaseWebProps {
@@ -74,20 +75,10 @@ const StyledLayout = styled('div')<ThemeProps>(({theme: {extendToken, token}}: T
 
         '.web-layout-content': {
             flex: 1,
-            marginLeft: '164px',
-            marginRight: '164px',
+            margin: '0 auto',
+            width: '90%',
             height: '100%',
             overflow: 'auto',
-
-            '&.__with-padding': {
-                padding: '0px 44px'
-            }
-        },
-
-        '.setting-pages .ant-sw-screen-layout-body, .setting-pages .ant-sw-screen-layout-footer': {
-            margin: '0 auto',
-            width: extendToken.bigOneColumnWidth,
-            maxWidth: '100%'
         },
 
         '.web-cancel-fill-height .ant-sw-screen-layout-body': {
@@ -108,49 +99,21 @@ const StyledLayout = styled('div')<ThemeProps>(({theme: {extendToken, token}}: T
             display: 'flex',
             flexDirection: 'column'
         },
-
-        '.web-single-column': {
-            '.ant-sw-screen-layout-body, .ant-sw-screen-layout-footer': {
-                width: extendToken.oneColumnWidth,
-                maxWidth: '100%',
-                marginLeft: 'auto',
-                marginRight: 'auto'
-            }
-        },
-
-        // Custom layout header
-        '.ant-sw-screen-layout-header .ant-sw-header-container-center': {
-            paddingTop: token.paddingLG,
-            paddingBottom: token.paddingLG,
-
-            '.ant-sw-header-left-part': {
-                marginLeft: 0
-            },
-
-            '.ant-sw-header-center-part': {
-                right: 'initial',
-                left: 40,
-                width: 'auto',
-
-                '.ant-sw-sub-header-title-content': {
-                    fontSize: 30
-                }
-            }
-        }
     };
 });
 
 const BaseWeb = ({children}: LayoutBaseWebProps) => {
     const {title, onBack, showBackButtonOnHeader} = useContext(AppContext);
     const {isReady} = useContext(DataContext);
+    const {screenType} = useContext(ScreenContext);
 
     return (
         <StyledLayout className={CN('web-layout-container')}>
-            {isReady && title && <div className={CN('web-layout-background')}/>}
+            {isReady && title && <div className={CN('web-layout-background' )}/>}
 
             <div className={CN('web-layout-body')}>
                 {isReady && title && <Header title={title} onBack={onBack} showBackButton={showBackButtonOnHeader}/>}
-                <div className={CN('web-layout-content')}>
+                <div className={CN('web-layout-content', screenType === Screens.MOBILE ? 'screen-mobile' : '')}>
                     {children}
                 </div>
             </div>

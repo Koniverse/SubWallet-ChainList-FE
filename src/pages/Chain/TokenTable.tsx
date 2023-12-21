@@ -3,8 +3,8 @@ import React, {useCallback, useContext, useEffect, useMemo, useState} from "reac
 import styled from "styled-components";
 import DetailTable from "./DetailTable";
 import {useTranslation} from "react-i18next";
-import {Button, Icon, ModalContext} from "@subwallet/react-ui";
-import {PlusCircle} from "phosphor-react";
+import { Icon, ModalContext} from "@subwallet/react-ui";
+import {AddressBook} from "phosphor-react";
 import {ChainAsset} from "../../types/dataType";
 import {TokenPrice} from "../../components/Token/TokenPrice";
 import {TokenItem} from "../../components/Token/TokenItem";
@@ -12,6 +12,7 @@ import axios from "axios";
 import {URL_DATA_GET_PRICE_TOKEN} from "../../libs/utils/constant";
 import {TokenDetailModal} from "./TokenDetailModal";
 import CN from "classnames";
+import ButtonBackground from "../../Button/ButtonBackground";
 
 type Props = ThemeProps & {
     chainAssetList: ChainAsset[];
@@ -41,8 +42,6 @@ const Component = ({chainAssetList, searchInput, chainSlug, className}: Props) =
                 const response = await axios.get(url);
                 if (response.data && response.data.length > 0) {
                     const {current_price, price_change_24h} = response.data[0];
-                    console.log('current_price', current_price);
-                    console.log('price_change_24h', price_change_24h);
                     setCurrentPrice(current_price);
                     setPastPrice(current_price - price_change_24h);
                 }
@@ -119,16 +118,16 @@ const Component = ({chainAssetList, searchInput, chainSlug, className}: Props) =
                     {
                         render: (_, row) => {
                             return (
-                                <Button
+                                <ButtonBackground
                                     icon={(
                                         <Icon
-                                            phosphorIcon={PlusCircle}
-                                            size={'sm'}
+                                            phosphorIcon={AddressBook}
+                                            size={'xs'}
                                             weight={'fill'}
                                         />
                                     )}
                                     shape={'circle'}
-                                    type='ghost'
+                                    type='primary'
                                     size={'xs'}
                                 />
                             );
@@ -159,17 +158,17 @@ const TokenTable = styled(Component)<ThemeProps>(({theme: {extendToken, token}}:
             textAlign: 'center'
         },
 
-        '.ant-table-wrapper .ant-pagination ':{
-            '.ant-pagination-item':{
+        '.ant-table-wrapper .ant-pagination ': {
+            '.ant-pagination-item': {
                 display: "none",
             },
-            '.ant-pagination-prev':{
+            '.ant-pagination-prev': {
                 'button': {
                     borderRadius: '50%',
                     backgroundColor: 'rgba(255, 255, 255, 0.12)'
                 }
             },
-            '.ant-pagination-next':{
+            '.ant-pagination-next': {
                 'button': {
                     borderRadius: '50%',
                     backgroundColor: 'rgba(255, 255, 255, 0.12)'

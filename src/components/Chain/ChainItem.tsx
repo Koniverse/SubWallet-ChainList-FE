@@ -4,7 +4,7 @@ import {PlusCircle} from 'phosphor-react';
 import React, {useCallback, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
-import { ThemeProps} from "../../types";
+import {ThemeProps} from "../../types";
 import {Chain, ChainType} from "../../types/dataType";
 import ChainAssetGroup from "../ChainAssetGroup";
 import {useNavigate} from "react-router-dom";
@@ -34,9 +34,7 @@ function Component(props: Props): React.ReactElement<Props> {
         navigate('/chain/' + chain.slug);
     }, [chain, navigate])
     return (
-        <div
-            className={CN(className, '-normal-mode')}
-        >
+        <div className={CN(className, '-normal-mode')} key={chain.id}>
             <div className={'__item-header'}>
                 <Image
                     height={40}

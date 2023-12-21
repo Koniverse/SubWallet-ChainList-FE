@@ -6,6 +6,7 @@ import { WellKnownChain } from '@substrate/connect';
 
 import { ScProvider } from '@polkadot/rpc-provider';
 import { ProviderInterface, ProviderInterfaceCallback, ProviderInterfaceEmitCb, ProviderInterfaceEmitted } from '@polkadot/rpc-provider/types';
+import {log} from "util";
 
 export const relayChainSpecs: Record<string, string> = {
   kusama: WellKnownChain.ksmcc3,
@@ -122,28 +123,27 @@ class ProviderPlaceholder implements ProviderInterface {
   }
 }
 
-export function getSubstrateConnectProvider (specLink: string): ProviderInterface {
+export function getSubstrateConnectProvider (specLink: string): ProviderInterface  | null {
   const [relayName, paraName] = specLink.split('/');
-  console.log('relayName', relayName)
-  console.log('paraName', paraName)
   const relaySpec: string = relayChainSpecs[relayName];
-  console.log('relaySpec', relaySpec)
 
   const relayProvider = new ScProvider(Sc, relaySpec);
-
   if (!paraName) {
+    if (!relayProvider.isConnected) {
+      return null;
+
+    }
     return relayProvider;
   }
 
   const paraChainData = paraChainSpecs[specLink];
   let scProvider: ScProvider | undefined;
   const scPromise = fetch(paraChainData).then((rs) => rs.text()).then((spec) => {
-    console.log('spec', spec);
     scProvider = new ScProvider(Sc, spec);
-
     return scProvider;
-  }).catch(console.error) as Promise<ScProvider>;
-
+  }).catch((e)  => {
+    return null;
+  }) as Promise<ScProvider>;
   return new ProviderPlaceholder(scPromise);
 }
 

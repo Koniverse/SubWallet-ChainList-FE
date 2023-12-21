@@ -1,7 +1,7 @@
 import React, {
     useCallback,
     useContext,
-    useEffect,
+    useEffect, useMemo,
     useState
 } from 'react';
 import {useNavigate, useParams} from "react-router-dom";
@@ -18,9 +18,13 @@ import NetworkType from "../../components/Icon/NetworkType";
 import {useSelector} from "react-redux";
 import {RootState} from "../../stores";
 import ProviderList from "../../components/Chain/ProviderList";
-import {MagnifyingGlass, X} from "phosphor-react";
+import { MagnifyingGlass, X} from "phosphor-react";
 import Search from "../../components/Search";
 import ClowdloanTable from "./ClowdloanTable";
+import {ScreenContext, Screens} from "../../providers/ScreenContext";
+import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
+import CN from "classnames";
+import ProviderTable from "../../components/Chain/ProviderTable";
 
 interface ChainDetailType extends Chain {
     addressPrefix: string,
@@ -38,12 +42,17 @@ const Component = () => {
     const {chainList} = useSelector((state: RootState) => state.chainStore);
     const {t} = useTranslation();
     const {setShowBackButtonOnHeader, setOnBack, setTitle} = useContext(AppContext);
-    const [searchInput] = useState<string>('');
+    const [activeTabIndex, setActiveTabIndex] = useState(0);
+    const [searchInput, setSearchInput] = useState<string>('');
+    const [searchInputAll, setSearchInputAll] = useState<string>('');
     const [searchInputProvider, setSearchInputProvider] = useState<string>('');
-    const handleSearch = useCallback((value: string) => setSearchInputProvider(value), [setSearchInputProvider]);
+    const handleSearch = useCallback((value: string) => setSearchInput(value), [setSearchInput]);
+    const handleSearchProvider = useCallback((value: string) => setSearchInputProvider(value), [setSearchInputProvider]);
+    const handleSearchAll = useCallback((value: string) => setSearchInputAll(value), [setSearchInputAll]);
     const navigate = useNavigate();
     const [chain, setChain] = useState<ChainDetailType>({} as ChainDetailType);
-    const [showSearchProvider, setShowSearchProvider] = useState(false)
+    const [showSearchProvider, setShowSearchProvider] = useState(false);
+    const {screenType, isWebUI} = useContext(ScreenContext);
     const handleHoverIconProviderSearch = useCallback(
         (visible: boolean) => {
             setShowSearchProvider(visible)
@@ -78,12 +87,30 @@ const Component = () => {
         setShowBackButtonOnHeader(true);
         setOnBack(goBack);
         getChain();
-    }, [slug, chainList, setTitle, t, setShowBackButtonOnHeader, setOnBack, goBack]);
+    }, [slug, chainList]);
 
-    return (
-        <div className={'__chain-detail'}>
-            <div className={'__chain-info'}>
-                <div className={'__item-data'}>
+    const TAB_LIST = useMemo(() => {
+        return [t('Tokens list'), t('Providers list'), t('Crowdloan funds')];
+    }, [t]);
+
+    const handleSelectTab = useCallback((index: number) => {
+        setActiveTabIndex(index);
+    }, []);
+    useEffect(() => {
+        if (activeTabIndex === 0) {
+            setSearchInput(searchInputAll);
+        }else if (activeTabIndex === 1){
+            setSearchInputProvider(searchInputAll);
+        }
+    }, [searchInputAll])
+
+    const isTablet = useMemo(() => {
+        return screenType !== Screens.DESKTOP;
+    }, [screenType]);
+    const chainInfoContent = useMemo(() => {
+        return (
+            <div className={CN('__chain-info', isTablet ? '__tablet' : '')}>
+                <div className={CN('__item-data')}>
                     <div className="__item-icon">
                         {chain.icon && (
                             <Image
@@ -163,6 +190,65 @@ const Component = () => {
                     </Button>
                 </div>
             </div>
+        )
+    }, [chain, t]);
+    if (isTablet) {
+        return (
+            <div className={'__chain-detail'}>
+                {chainInfoContent}
+                {isTablet && (
+                    <div className='menu-bar'>
+                        <Tabs
+                            onSelect={handleSelectTab}
+                            selectedIndex={activeTabIndex}
+                        >
+                            <TabList
+                                className={CN('react-tabs__tab-list')}
+                            >
+                                {TAB_LIST.map((label) => (
+                                    <Tab key={label}>{label}</Tab>
+                                ))}
+                            </TabList>
+                            <div style={{display: 'none'}}>
+                                <TabPanel></TabPanel>
+                                <TabPanel></TabPanel>
+                                <TabPanel></TabPanel>
+                            </div>
+                        </Tabs>
+
+                        <div className='right-section'>
+                            <Search
+                                onSearch={handleSearchAll}
+                                placeholder={t('Token, providers...')}
+                                searchValue={searchInputAll}
+                                showActionBtn
+                            />
+                        </div>
+                    </div>
+                )}
+                <div className={'__chain-list-container'}>
+                    {
+                        activeTabIndex === 0 && <TokenTable chainAssetList={chain.chainAsset}
+                                                            searchInput={searchInput}
+                                                            chainSlug={slug}
+                        />
+                    }
+                    {
+                        activeTabIndex === 1 && chain.providers && <ProviderTable chain={chain}
+                                                                                 searchInput={searchInputProvider}/>
+                    }
+                    {
+                        activeTabIndex === 2 && <ClowdloanTable crowdLoanList={chain.crowdLoanList}/>
+                    }
+                </div>
+            </div>
+        );
+    }
+
+
+    return (
+        <div className={'__chain-detail'}>
+            {chainInfoContent}
             <div className="__data-list">
                 <div className="__left-section">
                     <div className='__token_list'>
@@ -226,7 +312,7 @@ const Component = () => {
                                     onClickActionBtn={() => {
                                         setShowSearchProvider(false);
                                     }}
-                                    onSearch={handleSearch}
+                                    onSearch={handleSearchProvider}
                                     placeholder={t('Provider name ...')}
                                     searchValue={searchInputProvider}
                                     showActionBtn
@@ -293,16 +379,39 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
             },
             '.__item-data': {
                 display: 'flex',
+                '.__item-group': {
+                    display: 'flex',
+                    gap: '12px',
+                    justifyContent: 'space-between',
+                    marginBottom: '8px',
+
+                    '.__item-group-data': {
+                        display: 'flex',
+                        fontSize: '16px',
+                        lineHeight: '24px',
+                        minWidth: '100%',
+                        fontWeight: 600,
+                        color: '#FFFFFFD9',
+                        '.__item-value': {
+                            fontWeight: 500,
+                            color: '#FFFFFFA6',
+                            marginLeft: '12px',
+                        },
+                        '.__item-type': {
+                            marginLeft: '12px',
+                            display: 'flex',
+                        }
+                    },
+                },
+                '.__item-title': {
+                    marginBottom: '8px',
+                    'h4.ant-typography': {
+                        fontSize: '24px',
+                        margin: 0,
+                    }
+                },
             },
-            '.__item-icon': {
-                marginRight: '24px',
-            },
-            '.__item-group': {
-                display: 'flex',
-                gap: '12px',
-                justifyContent: 'space-between',
-                marginBottom: '8px',
-            },
+
             '.__button_connect': {
                 width: '240px',
                 height: '52px',
@@ -310,30 +419,86 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
                 borderRadius: '32px',
                 gap: '8px'
             },
-            '.__item-title': {
-                marginBottom: '8px',
-                'h4.ant-typography': {
-                    fontSize: '24px',
-                    margin: 0,
-                }
-            },
-            '.__item-group-data': {
-                display: 'flex',
-                fontSize: '16px',
-                lineHeight: '24px',
-                minWidth: 300,
-                fontWeight: 600,
-                color: '#FFFFFFD9',
-                '.__item-value': {
-                    fontWeight: 500,
-                    color: '#FFFFFFA6',
-                    marginLeft: '12px',
+
+            '&.__tablet': {
+                justifyContent: 'start',
+                flexDirection: 'column',
+                '.__item-group': {
+                    flexDirection: 'column',
                 },
-                '.__item-type': {
-                    marginLeft: '12px',
-                    display: 'flex',
+                '.__item-button': {
+                    margin: '0 auto',
+                    marginTop: 12
                 }
             },
+            '.__item-icon': {
+                marginRight: '24px',
+            },
+        },
+
+        '.menu-bar': {
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'transparent',
+            minHeight: 50,
+
+            '.web-header': {
+                flex: 1,
+                '.header-content': {
+                    color: token.colorTextBase,
+                    fontWeight: token.fontWeightStrong,
+                    fontSize: token.fontSizeHeading4,
+                    lineHeight: token.lineHeightHeading4,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    overflow: 'hidden'
+                }
+            },
+            '.react-tabs__tab-list': {
+                paddingInlineStart: 0,
+            },
+
+            '.react-tabs__tab': {
+                textAlign: 'center',
+                display: 'inline-block',
+                border: 'none',
+                outline: 'none',
+                position: 'relative',
+                listStyle: 'none',
+                fontSize: token.fontSizeLG,
+                lineHeight: token.lineHeightLG,
+                fontWeight: token.headingFontWeight,
+                cursor: 'pointer',
+                flex: 'unset',
+                borderRadius: 0,
+                color: token.colorTextLight4,
+                padding: 0,
+                marginRight: 16,
+                paddingTop: 10,
+                paddingBottom: token.paddingXS,
+                borderBottom: '2px solid transparent',
+
+
+                '&--selected': {
+                    background: 'transparent',
+                    color: token.colorTextLight2,
+                    borderBottomColor: token.colorTextLight2
+                }
+            },
+
+            '.right-section': {
+                justifySelf: 'end',
+                display: 'flex',
+                '.search-input': {
+                    width: 360,
+                    height: 50,
+                    '&.ant-input-container .ant-input': {
+                        borderRadius: 8,
+                    }
+                }
+            }
         },
         '.__data-list': {
             display: 'flex',
