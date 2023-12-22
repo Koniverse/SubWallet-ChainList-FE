@@ -38,7 +38,6 @@ function Component(props: Props): React.ReactElement<Props> {
         title
     } = props;
     const _onChange = useCallback((e: CheckboxChangeEvent) => {
-        console.log('radio checked', e.target.value);
         setValue(e.target.value);
     }, []);
     const filterModalFooter = useMemo(() => {

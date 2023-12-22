@@ -8,7 +8,8 @@ import {AppStateProvider} from "./providers/AppStateProvider";
 import NotificationProvider from './providers/NotificationProvider';
 import {DataContextProvider} from "./providers/DataContext";
 import {ModalContextProvider} from "@subwallet/react-ui";
-import { ScreenContextProvider } from './providers/ScreenContext';
+import {ScreenContextProvider} from './providers/ScreenContext';
+import {WalletContextProvider} from "./providers/WalletContextProvider";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -19,11 +20,13 @@ root.render(
             <ScreenContextProvider>
                 <ThemeProvider>
                     <ModalContextProvider>
-                        <NotificationProvider>
-                            <AppStateProvider>
-                                <RouterProvider router={router}/>
-                            </AppStateProvider>
-                        </NotificationProvider>
+                        <WalletContextProvider>
+                            <NotificationProvider>
+                                <AppStateProvider>
+                                    <RouterProvider router={router}/>
+                                </AppStateProvider>
+                            </NotificationProvider>
+                        </WalletContextProvider>
                     </ModalContextProvider>
                 </ThemeProvider>
             </ScreenContextProvider>

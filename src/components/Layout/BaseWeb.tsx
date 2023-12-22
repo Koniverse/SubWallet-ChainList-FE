@@ -6,6 +6,7 @@ import Header from "./Header";
 import {AppContext} from "../../providers/AppStateProvider";
 import {DataContext} from "../../providers/DataContext";
 import {ScreenContext, Screens} from "../../providers/ScreenContext";
+import SelectWalletModal from "../Modal/Wallet/SelectWalletModal";
 
 
 export interface LayoutBaseWebProps {
@@ -117,6 +118,7 @@ const BaseWeb = ({children}: LayoutBaseWebProps) => {
                     {children}
                 </div>
             </div>
+            <SelectWalletModal />
         </StyledLayout>
     );
 };

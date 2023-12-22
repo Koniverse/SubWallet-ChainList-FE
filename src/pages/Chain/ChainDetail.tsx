@@ -25,6 +25,7 @@ import {ScreenContext, Screens} from "../../providers/ScreenContext";
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import CN from "classnames";
 import ProviderTable from "../../components/Chain/ProviderTable";
+import { OpenSelectWallet } from '../../providers/WalletContextProvider';
 
 interface ChainDetailType extends Chain {
     addressPrefix: string,
@@ -40,8 +41,10 @@ interface ChainDetailType extends Chain {
 const Component = () => {
     const {slug} = useParams();
     const {chainList} = useSelector((state: RootState) => state.chainStore);
+
     const {t} = useTranslation();
     const {setShowBackButtonOnHeader, setOnBack, setTitle} = useContext(AppContext);
+    const {open} = useContext(OpenSelectWallet);
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const [searchInput, setSearchInput] = useState<string>('');
     const [searchInputAll, setSearchInputAll] = useState<string>('');
@@ -53,6 +56,9 @@ const Component = () => {
     const [chain, setChain] = useState<ChainDetailType>({} as ChainDetailType);
     const [showSearchProvider, setShowSearchProvider] = useState(false);
     const {screenType} = useContext(ScreenContext);
+    const handleConnectWallet = useCallback(() => {
+        open();
+    }, []);
     const handleHoverIconProviderSearch = useCallback(
         (visible: boolean) => {
             setShowSearchProvider(visible)
@@ -180,6 +186,7 @@ const Component = () => {
                     <Button
                         icon={<Logo2D/>}
                         className={'__button_connect'}
+                        onClick={handleConnectWallet}
                     >
                         {t('Add to wallet')}
                     </Button>

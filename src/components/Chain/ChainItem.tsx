@@ -1,7 +1,7 @@
 import {Button, Icon, Image, Typography} from '@subwallet/react-ui';
 import CN from 'classnames';
 import {PlusCircle} from 'phosphor-react';
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useContext, useMemo, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
 import {ThemeProps} from "../../types";
@@ -10,6 +10,7 @@ import ChainAssetGroup from "../ChainAssetGroup";
 import {useNavigate} from "react-router-dom";
 import ArrowRight from "../../components/Icon/ArrowRight";
 import NetworkType from "../../components/Icon/NetworkType";
+import {OpenSelectWallet} from "../../providers/WalletContextProvider";
 
 type Props = ThemeProps & {
     compactMode?: boolean
@@ -19,23 +20,26 @@ type Props = ThemeProps & {
 function Component(props: Props): React.ReactElement<Props> {
     const {className, chain} = props;
     const {t} = useTranslation();
+    const {open} = useContext(OpenSelectWallet);
     const navigate = useNavigate();
+    const onClickConnect = useCallback((event: React.MouseEvent<HTMLElement>) => {
+        open();
+        event.stopPropagation();
+
+    }, [open]);
     const type = useMemo(() => {
         if (chain.substrateInfo) {
             return ChainType.SUBSTRATE
         }
         return ChainType.EVM
     }, [chain]);
-    let onClickConnect = useCallback((event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
-    }, []);
     const onClickItem = useCallback((event: React.MouseEvent<HTMLElement>) => {
-        event.stopPropagation();
         navigate('/chain/' + chain.slug);
+        event.stopPropagation();
     }, [chain, navigate])
     return (
-        <div className={CN(className, '-normal-mode')} key={chain.id}>
-            <div className={'__item-header'}>
+        <div className={CN(className, '-normal-mode')} key={chain.id} onClick={onClickItem}>
+            <div className={'__item-header'} onClick={onClickItem}>
                 <Image
                     height={40}
                     src={chain.icon.data.attributes.url}
@@ -65,7 +69,7 @@ function Component(props: Props): React.ReactElement<Props> {
 
                 <div className="__item-connect-button">
                     <Button
-                        className={'__item-join-now-button'}
+                        className={'__item-connect'}
                         icon={(
                             <Icon
                                 phosphorIcon={PlusCircle}
@@ -78,8 +82,9 @@ function Component(props: Props): React.ReactElement<Props> {
                         shape={'circle'}
                         type='ghost'
                         size={'xs'}
-                    />
-                    <Typography.Text>{t('Add to wallet')}</Typography.Text>
+                    >
+                        <Typography.Text>{t('Add to wallet')}</Typography.Text>
+                    </Button>
                 </div>
 
                 <Button
@@ -99,6 +104,7 @@ const ChainItem = styled(Component)<Props>(({theme: {token}}: Props) => {
     return {
         overflow: 'hidden',
         cursor: 'pointer',
+        zIndex:0,
 
         '&.-normal-mode': {
             padding: token.padding,
@@ -168,15 +174,16 @@ const ChainItem = styled(Component)<Props>(({theme: {token}}: Props) => {
             '.__item-connect-button': {
                 display: 'flex',
                 alignItems: 'center',
-                gap: token.sizeXS
+                gap: token.sizeXS,
+                '.__item-connect': {
+                    padding: 0
+                }
             }
         },
 
         '&.-normal-mode:hover': {
             backgroundColor: token.colorBgInput
         },
-
-        // compact
 
         '&.-compact-mode': {
             display: 'flex',
