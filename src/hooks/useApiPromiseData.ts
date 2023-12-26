@@ -5,23 +5,27 @@ import {ProviderInterface} from "@polkadot/rpc-provider/types";
 import {getSubstrateConnectProvider} from "../libs";
 import {ConnectionStatus, ProviderCollection} from "../types/dataType";
 
-const restartInterval = 5000 * 60;
+const restartInterval = 1000 * 60;
 
 
 const getData = async (url: string) => {
     return new Promise<ProviderCollection>(async (resolve) => {
-        let provider: ProviderInterface | null = null;
+
         try {
+            let provider: ProviderInterface | null = null;
+
             if (url.startsWith('light://')) {
                 provider = getSubstrateConnectProvider(url.replace('light://substrate-connect/', ''));
-                if (!provider) {
-                    return {
-                        url, status: ConnectionStatus.FAIL
-                    } as ProviderCollection;
+                if (provider) {
+                    await provider.connect();
                 }
-                await provider.connect();
             } else {
                 provider = new WsProvider(url);
+            }
+            if (!provider) {
+                return resolve({
+                    url, status: ConnectionStatus.FAIL
+                } as ProviderCollection);
             }
             const api = await ApiPromise.create({provider});
             let count = 0;
@@ -35,10 +39,9 @@ const getData = async (url: string) => {
                 } as ProviderCollection);
             });
         } catch (e) {
-            console.log(e)
-            resolve({
-                url, status: ConnectionStatus.FAIL
-            } as ProviderCollection);
+            return resolve({
+                    url, status: ConnectionStatus.FAIL
+                } as ProviderCollection);
         }
     });
 

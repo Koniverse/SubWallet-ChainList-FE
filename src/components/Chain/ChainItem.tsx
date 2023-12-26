@@ -1,7 +1,7 @@
 import {Button, Icon, Image, Typography} from '@subwallet/react-ui';
 import CN from 'classnames';
 import {PlusCircle} from 'phosphor-react';
-import React, {useCallback, useContext, useMemo, useState} from 'react';
+import React, {useCallback, useContext, useMemo} from 'react';
 import {useTranslation} from 'react-i18next';
 import styled from 'styled-components';
 import {ThemeProps} from "../../types";

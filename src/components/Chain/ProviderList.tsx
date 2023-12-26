@@ -20,6 +20,7 @@ interface Props extends ThemeProps {
 const Component = ({chain, searchInput, className}: Props) => {
     const urls = chain && chain.providers.length > 0 ? chain.providers.map((provider) => provider.url) : [];
     const providerConnectionStatus = useApiPromiseData(urls);
+    // console.log('providerConnectionStatus', providerConnectionStatus)
 
     const {t} = useTranslation();
     const filterFunction = useCallback((item: Provider) => {
