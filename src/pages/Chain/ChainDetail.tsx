@@ -59,7 +59,7 @@ const Component = () => {
     const {screenType} = useContext(ScreenContext);
     const handleConnectWallet = useCallback(() => {
         open();
-    }, []);
+    }, [open]);
     const handleHoverIconProviderSearch = useCallback(
         (visible: boolean) => {
             setShowSearchProvider(visible)
