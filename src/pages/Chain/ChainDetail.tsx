@@ -169,7 +169,6 @@ const Component = () => {
                             <Col span={12} className='__item-group'>
                                 <span className="__item-label __full-width">Block explorer:</span>
                                 <span className="__item-value" onClick={() => {
-                                    console.log('chain.blockExplorer', chain.blockExplorer)
                                     if (chain.blockExplorer) {
                                         openInNewTab(chain.blockExplorer)();
                                     }
