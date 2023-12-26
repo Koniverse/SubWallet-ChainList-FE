@@ -5,33 +5,42 @@ import {ProviderInterface} from "@polkadot/rpc-provider/types";
 import {getSubstrateConnectProvider} from "../libs";
 import {ConnectionStatus, ProviderCollection} from "../types/dataType";
 
-const restartInterval = 1000 * 60;
+const restartInterval = 5000 * 60;
 
 
 const getData = async (url: string) => {
-    let provider: ProviderInterface | null = null;
-    try {
-        if (url.startsWith('light://')) {
-            provider = getSubstrateConnectProvider(url.replace('light://substrate-connect/', ''));
-            if (!provider) {
-                return {
-                    url, status: ConnectionStatus.FAIL
-                } as ProviderCollection;
+    return new Promise<ProviderCollection>(async (resolve) => {
+        let provider: ProviderInterface | null = null;
+        try {
+            if (url.startsWith('light://')) {
+                provider = getSubstrateConnectProvider(url.replace('light://substrate-connect/', ''));
+                if (!provider) {
+                    return {
+                        url, status: ConnectionStatus.FAIL
+                    } as ProviderCollection;
+                }
+                await provider.connect();
+            } else {
+                provider = new WsProvider(url);
             }
-            await provider.connect();
-        } else {
-            provider = new WsProvider(url);
+            const api = await ApiPromise.create({provider});
+            let count = 0;
+            // @ts-ignore
+            const unsubscribe = await api.rpc.chain.subscribeNewHeads((header: any) => {
+                if (++count === 1) {
+                    unsubscribe();
+                }
+                resolve({
+                    url, status: ConnectionStatus.CONNECTED
+                } as ProviderCollection);
+            });
+        } catch (e) {
+            console.log(e)
+            resolve({
+                url, status: ConnectionStatus.FAIL
+            } as ProviderCollection);
         }
-        await ApiPromise.create({provider});
-        await provider.disconnect();
-        return {
-            url, status: ConnectionStatus.CONNECTED
-        } as ProviderCollection;
-    } catch (e) {
-        return {
-            url, status: ConnectionStatus.FAIL
-        } as ProviderCollection;
-    }
+    });
 
 }
 

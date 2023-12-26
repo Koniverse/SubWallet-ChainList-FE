@@ -26,6 +26,7 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import CN from "classnames";
 import ProviderTable from "../../components/Chain/ProviderTable";
 import { OpenSelectWallet } from '../../providers/WalletContextProvider';
+import {openInNewTab} from "../../libs";
 
 interface ChainDetailType extends Chain {
     addressPrefix: string,
@@ -167,14 +168,23 @@ const Component = () => {
                             </Col>
                             <Col span={12} className='__item-group'>
                                 <span className="__item-label __full-width">Block explorer:</span>
-                                <span className="__item-value">
+                                <span className="__item-value" onClick={() => {
+                                    console.log('chain.blockExplorer', chain.blockExplorer)
+                                    if (chain.blockExplorer) {
+                                        openInNewTab(chain.blockExplorer)();
+                                    }
+                                }}>
                                     {chain.blockExplorer}
                                 </span>
                             </Col>
                             <Col span={12} className='__item-group'>
                                 <span className="__item-label __full-width">Crowdloan URL:</span>
 
-                                <span className="__item-value">
+                                <span className="__item-value" onClick={() => {
+                                    if (chain.crowdloanUrl) {
+                                        openInNewTab(chain.crowdloanUrl)();
+                                    }
+                                }}>
                                     {chain.crowdloanUrl}
                                 </span>
                             </Col>
@@ -395,6 +405,7 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
                         color: '#FFFFFFA6',
                         marginLeft: '12px',
                         wordBreak: 'break-word',
+                        cursor: 'pointer',
                     },
                     '.__item-type': {
                         marginLeft: '12px',

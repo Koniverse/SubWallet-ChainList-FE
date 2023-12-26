@@ -165,3 +165,11 @@ export const convertHexColorToRGBA = (hexCode: string, opacity = 1) => {
 
   return `rgba(${r},${g},${b},${opacity})`;
 };
+
+
+
+export const openInNewTab = (url: string) => {
+    return () => {
+        window.open(url, '_blank');
+    };
+};

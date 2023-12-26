@@ -14,12 +14,7 @@ import {DownloadSimple, CheckCircle, MagnifyingGlass} from "phosphor-react";
 import EmptyList from "../../EmptyList";
 import {Wallet} from '@subwallet/wallet-connect/types';
 import CN from "classnames";
-
-export const openInNewTab = (url: string) => {
-    return () => {
-        window.open(url, '_blank');
-    };
-};
+import {openInNewTab} from "../../../libs";
 
 type ExtensionItemProps = Wallet & {
     type: 'substrate' | 'evm',
