@@ -10,6 +10,7 @@ import {Hash} from "phosphor-react";
 import {convertHexColorToRGBA} from "../../libs";
 import {CrowdloanStatus} from "../../types/dataType";
 import CN from "classnames";
+import {useTranslation} from "react-i18next";
 
 type Props = ThemeProps & {
     onPressItem?: BalanceItemProps['onPressItem'],
@@ -19,6 +20,7 @@ type Props = ThemeProps & {
 
 function Component(
     props: Props) {
+    const {t} = useTranslation();
     const {
         className = '',
         fundId,
@@ -42,7 +44,7 @@ function Component(
             />
             <div className='crowdloan-item-information'>
                 <Typography.Text className='crowdloan-item-information__title'>
-                    Aution #{fundId}
+                    {t('Auction')} #{fundId}
                 </Typography.Text>
             </div>
         </div>
@@ -65,6 +67,10 @@ export const CrowdloanItem = styled(Component)<Props>(({theme: {token}}: Props) 
                 '&.in_auction': {
                     color: token['gold-6'],
                     backgroundColor: convertHexColorToRGBA(token['gray-6'], 0.1),
+                },
+                '&.withdraw': {
+                    color: 'rgb(195 142 43)',
+                    backgroundColor: 'rgb(63 62 58)',
                 },
                 '&.failed': {
                     color: '#E11A1A',

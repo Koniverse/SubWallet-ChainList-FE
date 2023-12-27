@@ -34,7 +34,7 @@ const createTagValue = (t: TFunction): Record<CrowdloanStatus, CrowdloanTagType>
         },
         [CrowdloanStatus.WITHDRAW]: {
             label: t('Withdraw'),
-            color: '#4CEAAC1A',
+            color: '#D9A33E1A',
             icon: Money,
             weight: 'fill'
         },
@@ -92,6 +92,10 @@ const CrowdloanTag = styled(Component)<Props>(({theme: {token}}: Props) => {
         '&.__crowdloan_type.failed': {
             color: '#E11A1A',
             backgroundColor: convertHexColorToRGBA('#E11A1A', 0.1),
+        },
+        '&.__crowdloan_type.withdraw': {
+            color: 'rgb(195 142 43)',
+            backgroundColor: 'rgb(63 62 58)',
         }
     };
 });

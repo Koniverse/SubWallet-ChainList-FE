@@ -125,10 +125,10 @@ class ProviderPlaceholder implements ProviderInterface {
 export function getSubstrateConnectProvider (specLink: string): ProviderInterface  | null {
   const [relayName, paraName] = specLink.split('/');
   const relaySpec: string = relayChainSpecs[relayName];
-  console.log('relaySpec', relaySpec)
+  // console.log('relaySpec', relaySpec)
 
   const relayProvider = new ScProvider(Sc, relaySpec);
-  console.log('relayProvider', relayProvider)
+  // console.log('relayProvider', relayProvider)
   if (!paraName) {
     // if (!relayProvider.isConnected) {
     //   return null;
