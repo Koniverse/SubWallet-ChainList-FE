@@ -2,7 +2,7 @@ import {ApiPromise, WsProvider} from "@polkadot/api";
 import {useQueries} from "@tanstack/react-query";
 import {useCallback} from "react";
 import {ProviderInterface} from "@polkadot/rpc-provider/types";
-import {getSubstrateConnectProvider} from "../libs";
+import {getSubstrateConnectProvider} from "../libs/lightSubstrateConnect";
 import {ConnectionStatus, ProviderCollection} from "../types/dataType";
 
 const restartInterval = 1000 * 60;
