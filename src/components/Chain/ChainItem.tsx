@@ -11,6 +11,7 @@ import {useNavigate} from "react-router-dom";
 import ArrowRight from "../../components/Icon/ArrowRight";
 import NetworkType from "../../components/Icon/NetworkType";
 import {OpenSelectWallet} from "../../providers/WalletContextProvider";
+import TestnetIcon from "../Icon/TestnetIcon";
 
 type Props = ThemeProps & {
     compactMode?: boolean
@@ -55,7 +56,10 @@ function Component(props: Props): React.ReactElement<Props> {
                 </div>
             </div>
             <div className={'__item-type'}>
-                <NetworkType type={type}/>
+                <div className="__item-type-icon">
+                    <TestnetIcon isTestnet={chain.isTestnet}/>
+                    <NetworkType type={type}/>
+                </div>
                 {
                     !!chain.chainAsset && !!chain.chainAsset.length && (
                         <div className='__item-chains-area'>
@@ -104,7 +108,7 @@ const ChainItem = styled(Component)<Props>(({theme: {token}}: Props) => {
     return {
         overflow: 'hidden',
         cursor: 'pointer',
-        zIndex:0,
+        zIndex: 0,
 
         '&.-normal-mode': {
             padding: token.padding,
@@ -166,7 +170,11 @@ const ChainItem = styled(Component)<Props>(({theme: {token}}: Props) => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: 16
+            marginBottom: 16,
+            '.__item-type-icon': {
+                display: 'flex',
+                gap: 4
+            }
         },
         '.__item-connect': {
             display: 'flex',

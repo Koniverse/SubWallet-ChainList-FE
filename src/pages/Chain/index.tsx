@@ -19,7 +19,7 @@ import {Chain as ChainType} from "../../types/dataType";
 import Search from "../../components/Search";
 import {FadersHorizontal} from 'phosphor-react';
 import {useFilterModal} from "../../hooks/modal/useFilterModal";
-import {FilterRadioModal} from "../../components/Modal/FilterRadioModal";
+import { FilterModal } from "../../components/Modal/FilterModal";
 
 const FILTER_MODAL_ID = 'chain-index-filter-modal';
 
@@ -36,10 +36,11 @@ const Component = () => {
     const [activeTabIndex, setActiveTabIndex] = useState(0);
     const {setTitle, setShowBackButtonOnHeader} = useContext(AppContext);
     const handleSearch = useCallback((value: string) => setSearchInput(value), [setSearchInput]);
-    const [filterTestnet, setFilterTestnet] = useState(FilterValue.ALL)
     const {
         filterSelectionMap,
         onChangeFilterOption,
+        selectedFilters,
+        onApplyFilter,
         onCloseFilterModal
     } = useFilterModal(FILTER_MODAL_ID);
     const {activeModal} = useContext(ModalContext);
@@ -63,7 +64,7 @@ const Component = () => {
     }, [setShowBackButtonOnHeader, setTitle, t]);
 
     const TAB_LIST = useMemo(() => {
-        return [t('All'), t('Subtrade'), t('EVM')];
+        return [t('All'), t('Substrade'), t('EVM')];
     }, [t]);
 
     const handleSelectTab = useCallback((index: number) => {
@@ -72,10 +73,13 @@ const Component = () => {
 
     const filteredList = useMemo(() => {
         let searchTestnet: boolean | null = null;
-        if (filterTestnet === FilterValue.TESTNET) {
-            searchTestnet = true;
-        } else if (filterTestnet === FilterValue.MAINNET) {
-            searchTestnet = false;
+        if (selectedFilters.length > 0) {
+            if (!selectedFilters.includes(FilterValue.ALL)) {
+                searchTestnet = selectedFilters.includes(FilterValue.TESTNET);
+            }
+            if (selectedFilters.includes(FilterValue.TESTNET) && selectedFilters.includes(FilterValue.MAINNET)) {
+                searchTestnet = null;
+            }
         }
 
         return chainList.filter((node: ChainType) => {
@@ -95,12 +99,7 @@ const Component = () => {
             return filter;
 
         });
-    }, [chainList, searchInput, activeTabIndex, filterTestnet]);
-
-    const onApplyFilter = useCallback((value: FilterValue) => {
-        setFilterTestnet(value);
-        onCloseFilterModal();
-    }, [onCloseFilterModal])
+    }, [chainList, searchInput, activeTabIndex, selectedFilters]);
 
 
     return (
@@ -155,7 +154,7 @@ const Component = () => {
                     ))
                 }
             </div>
-            <FilterRadioModal
+            <FilterModal
                 applyFilterButtonTitle={t('Apply filter')}
                 id={FILTER_MODAL_ID}
                 onApplyFilter={onApplyFilter}

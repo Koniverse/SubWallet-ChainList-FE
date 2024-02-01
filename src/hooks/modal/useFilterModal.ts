@@ -19,6 +19,7 @@ export function useFilterModal (modalId: string) {
   }, [inactiveModal, modalId, selectedFilters]);
 
   const onChangeFilterOption = useCallback((value: string, isCheck: boolean) => {
+    console.log(value, isCheck)
     setFilterSelectionMap((prev) => ({
       ...prev,
       [value]: isCheck
@@ -27,6 +28,7 @@ export function useFilterModal (modalId: string) {
 
   const onApplyFilter = useCallback(() => {
     inactiveModal(modalId);
+    console.log('filterSelection========Map', filterSelectionMap)
     setSelectedFilters(Object.keys(filterSelectionMap).filter((o) => filterSelectionMap[o]));
   }, [filterSelectionMap, inactiveModal, modalId]);
 

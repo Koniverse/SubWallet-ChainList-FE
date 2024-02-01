@@ -45,20 +45,6 @@ export function convertToByte(value: number, unit: string): number  {
 export const convertPlotSizeToByte = (numberOfPlot: number, unit='gib'): number => {
     return convertToByte(numberOfPlot, unit)  * FOR_TECHNICAL_PURPOSE_VALUE;
 }
-
-export const convertPlotSizeToShorter = (plotSize: number): number => {
-    return plotSize / BYTES_PER_TB;
-}
-
-
-export const listSize = [
-    {value: 'gib', label: 'GB'},
-    {value: 'tib', label: 'TB'},
-    {value: 'pib', label: 'PB'},
-    {value: 'eib', label: 'EB'},
-]
 export const DATE_FORMAT = 'MM/DD/YYYY';
 export const MONTH_FORMAT = 'MM/YYYY';
 export const YEAR_FORMAT = 'YYYY';
-
-export const PAGE_TITLE = 'Farming Space';

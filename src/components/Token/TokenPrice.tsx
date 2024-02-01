@@ -40,7 +40,7 @@ function Component (
         decimal={0}
         decimalOpacity={0.45}
         prefix={'$'}
-        value={value}
+        value={value ?? 0}
       />
       <Number
         className={'__percentage'}
@@ -50,7 +50,7 @@ function Component (
         prefix={priceChangeStatus === 'decrease' ? '-' : '+'}
         suffix='%'
         unitColor={marginColor}
-        value={margin}
+        value={margin ?? 0}
       />
     </div>
   );
