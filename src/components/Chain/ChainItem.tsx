@@ -29,6 +29,9 @@ function Component(props: Props): React.ReactElement<Props> {
 
     }, [open]);
     const type = useMemo(() => {
+        if (chain.evmInfo && chain.substrateInfo) {
+            return ChainType.ALL;
+        }
         if (chain.substrateInfo) {
             return ChainType.SUBSTRATE
         }

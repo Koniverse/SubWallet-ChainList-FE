@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import {BaseModal} from '../../components/Modal/BaseModal';
 import {ChainAsset} from "../../types/dataType";
 import Logo2D from "../../components/Logo/Logo2D";
+import {capitalizeFirstLetter} from "../../utils";
 
 type Props = ThemeProps & {
     id: string,
@@ -41,8 +42,9 @@ function Component({
             }
             if (tokenDetail.assetRefs.length > 0){
                 const items: string[] = [];
+                console.log(tokenDetail.assetRefs)
                 tokenDetail.assetRefs.forEach((item) => {
-                    items.push(item.destAsset.data.attributes.name);
+                    items.push(capitalizeFirstLetter(item.destAsset.data.attributes.name));
                 })
                 xcmChanel += `${items.join(', ')}`;
             }
@@ -50,7 +52,7 @@ function Component({
                 const items: string[] = [];
                 tokenDetail.buyTokenConfigs.forEach((item) => {
                     item.services.forEach((service) => {
-                        items.push(service.service)
+                        items.push(capitalizeFirstLetter(service.service))
                     })
                 })
                 xcmbuyWith += `${items.join(', ')}`;

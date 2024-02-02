@@ -38,25 +38,35 @@ const NetworkType: React.FC<Props> = ({type}: Props) => {
 
         );
     }
+    const EvmLogo = () => {
+        return (
+            <svg width="54" height="22" viewBox="0 0 54 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="54" height="22" rx="8" fill="#004BFF" fillOpacity="0.1"/>
+                <path opacity="0.602" d="M14.1243 6V9.69668L17.2486 11.093L14.1243 6Z" fill="#76AAF7"/>
+                <path d="M14.1243 6L11 11.093L14.1243 9.69668V6Z" fill="#76AAF7"/>
+                <path opacity="0.602" d="M14.1243 13.4881V16L17.2504 11.6744L14.1243 13.4881Z" fill="#76AAF7"/>
+                <path d="M14.1243 16V13.4881L11 11.6744L14.1243 16Z" fill="#76AAF7"/>
+                <path opacity="0.2" d="M14.1243 12.9066L17.2486 11.0929L14.1243 9.69666V12.9066Z" fill="#76AAF7"/>
+                <path opacity="0.602" d="M11 11.0929L14.1243 12.9066V9.69666L11 11.0929Z" fill="#76AAF7"/>
+                <path
+                    d="M24.7971 15V7.55H29.7471V8.75H26.1571V10.66H29.5471V11.86H26.1571V13.8H29.7471V15H24.7971ZM32.7344 15L30.1344 7.55H31.6144L33.6544 13.72H33.3644L35.4044 7.55H36.8844L34.2944 15H32.7344ZM37.7171 15V7.55H39.0171L41.8071 11.34H41.1871L43.9171 7.55H45.2171V15H43.8471V9.1L44.3771 9.23L41.5471 13H41.3871L38.6271 9.23L39.0771 9.1V15H37.7171Z"
+                    fill="#76AAF7"/>
+            </svg>
+        );
+    }
     if (!type || type === ChainType.SUBSTRATE) {
         return SubstrateLogo();
     }
+    if (!type || type === ChainType.EVM) {
+        return EvmLogo();
+    }
     return (
-        <svg width="54" height="22" viewBox="0 0 54 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="54" height="22" rx="8" fill="#004BFF" fillOpacity="0.1"/>
-            <path opacity="0.602" d="M14.1243 6V9.69668L17.2486 11.093L14.1243 6Z" fill="#76AAF7"/>
-            <path d="M14.1243 6L11 11.093L14.1243 9.69668V6Z" fill="#76AAF7"/>
-            <path opacity="0.602" d="M14.1243 13.4881V16L17.2504 11.6744L14.1243 13.4881Z" fill="#76AAF7"/>
-            <path d="M14.1243 16V13.4881L11 11.6744L14.1243 16Z" fill="#76AAF7"/>
-            <path opacity="0.2" d="M14.1243 12.9066L17.2486 11.0929L14.1243 9.69666V12.9066Z" fill="#76AAF7"/>
-            <path opacity="0.602" d="M11 11.0929L14.1243 12.9066V9.69666L11 11.0929Z" fill="#76AAF7"/>
-            <path
-                d="M24.7971 15V7.55H29.7471V8.75H26.1571V10.66H29.5471V11.86H26.1571V13.8H29.7471V15H24.7971ZM32.7344 15L30.1344 7.55H31.6144L33.6544 13.72H33.3644L35.4044 7.55H36.8844L34.2944 15H32.7344ZM37.7171 15V7.55H39.0171L41.8071 11.34H41.1871L43.9171 7.55H45.2171V15H43.8471V9.1L44.3771 9.23L41.5471 13H41.3871L38.6271 9.23L39.0771 9.1V15H37.7171Z"
-                fill="#76AAF7"/>
-        </svg>
+        <>
+            {SubstrateLogo()}
+            {EvmLogo()}
+        </>
+    )
 
-
-    );
 };
 
 export default NetworkType;

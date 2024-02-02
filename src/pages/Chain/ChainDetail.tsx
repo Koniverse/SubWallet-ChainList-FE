@@ -27,6 +27,7 @@ import CN from "classnames";
 import ProviderTable from "../../components/Chain/ProviderTable";
 import { OpenSelectWallet } from '../../providers/WalletContextProvider';
 import {openInNewTab} from "../../libs";
+import TestnetIcon from "../../components/Icon/TestnetIcon";
 
 interface ChainDetailType extends Chain {
     addressPrefix: string,
@@ -86,6 +87,10 @@ const Component = () => {
                     newChain.decimals = chainData.evmInfo.decimals;
                     newChain.symbol = chainData.evmInfo.symbol;
                     newChain.type = ChainType.EVM;
+                }
+                if (chainData.substrateInfo && chainData.evmInfo) {
+                    newChain.type = ChainType.ALL;
+
                 }
                 setChain(newChain)
             }
@@ -150,7 +155,8 @@ const Component = () => {
                             </Col>
                             <Col span={8} className='__item-group'>
                                 <span className="__item-label">Type:</span>
-                                <span className="__item-type">
+                                <span className="__item-type __item-icon">
+                                    <TestnetIcon isTestnet={chain.isTestnet}/>
                                     <NetworkType type={chain.type}/>
                                 </span>
                             </Col>
@@ -205,38 +211,36 @@ const Component = () => {
     }, [chain, t]);
     if (isTablet) {
         return (
-            <div className={'__chain-detail'}>
+            <div className={'__chain-detail __ui-mobile'}>
                 {chainInfoContent}
-                {isTablet && (
-                    <div className='menu-bar'>
-                        <Tabs
-                            onSelect={handleSelectTab}
-                            selectedIndex={activeTabIndex}
+                <div className='menu-bar'>
+                    <Tabs
+                        onSelect={handleSelectTab}
+                        selectedIndex={activeTabIndex}
+                    >
+                        <TabList
+                            className={CN('react-tabs__tab-list')}
                         >
-                            <TabList
-                                className={CN('react-tabs__tab-list')}
-                            >
-                                {TAB_LIST.map((label) => (
-                                    <Tab key={label}>{label}</Tab>
-                                ))}
-                            </TabList>
-                            <div style={{display: 'none'}}>
-                                <TabPanel></TabPanel>
-                                <TabPanel></TabPanel>
-                                <TabPanel></TabPanel>
-                            </div>
-                        </Tabs>
-
-                        <div className='right-section'>
-                            <Search
-                                onSearch={handleSearchAll}
-                                placeholder={t('Token, providers...')}
-                                searchValue={searchInputAll}
-                                showActionBtn
-                            />
+                            {TAB_LIST.map((label) => (
+                                <Tab key={label}>{label}</Tab>
+                            ))}
+                        </TabList>
+                        <div style={{display: 'none'}}>
+                            <TabPanel></TabPanel>
+                            <TabPanel></TabPanel>
+                            <TabPanel></TabPanel>
                         </div>
+                    </Tabs>
+
+                    <div className='right-section'>
+                        <Search
+                            onSearch={handleSearchAll}
+                            placeholder={t('Token, providers...')}
+                            searchValue={searchInputAll}
+                            showActionBtn
+                        />
                     </div>
-                )}
+                </div>
                 <div className={'__chain-list-container'}>
                     {
                         activeTabIndex === 0 && <TokenTable chainAssetList={chain.chainAsset}
@@ -287,7 +291,7 @@ const Component = () => {
                         </div>
                         <div className="__items token-table">
                             <TokenTable chainAssetList={chain.chainAsset}
-                                        searchInput={searchInputProvider}
+                                        searchInput={searchInput}
                                         chainSlug={slug}
                                         pagination={{defaultPageSize: 10, showSizeChanger: false}}
                             />
@@ -409,6 +413,10 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
                     '.__item-type': {
                         marginLeft: '12px',
                         display: 'flex',
+                        '&.__item-icon': {
+                            display: 'flex',
+                            gap: '4px',
+                        }
                     }
 
                 },
@@ -588,6 +596,18 @@ const ChainDetail = styled(WrapperComponent)<ThemeProps>(({theme: {extendToken, 
                 }
             }
         },
+        '.__ui-mobile': {
+                '.menu-bar': {
+                    flexDirection: 'column',
+                }
+            },
+        '@media (max-width: 768px)': {
+            '.__ui-mobile': {
+                '.menu-bar': {
+                    flexDirection: 'column',
+                }
+            },
+        }
     }
 });
 

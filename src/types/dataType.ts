@@ -158,6 +158,7 @@ export interface ProviderCollection {
 
 
 export enum ChainType {
+    ALL = 'ALL',
     EVM = 'EVM',
     SUBSTRATE = 'SUBSTRATE',
 }
